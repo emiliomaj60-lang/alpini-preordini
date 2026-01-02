@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Festa Alpini - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.jpg') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.jpg') }}">
+    <meta name="theme-color" content="#1f4d1f">
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #1f4d1f;
+            color: white;
+            animation: fadeIn 0.4s ease-out;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* MENU LATERALE */
+        #sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 3000;
+            top: 0;
+            left: 0;
+            background: #0f2f0f;
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 50px;
+        }
+
+        #sidebar a {
+            padding: 10px 18px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            border-bottom: 1px solid #2e6b2f;
+        }
+
+        #sidebar a:hover {
+            background: #2e6b2f;
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            padding: 8px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+
+        /* HEADER */
+        .header {
+            background: #2e6b2f;
+            padding: 6px;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header img {
+            max-height: 55px;
+            margin-bottom: 3px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        /* BANNER LED */
+        .banner-led {
+            width: 100%;
+            background: #b30000;
+            color: yellow;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 5px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-top: 2px solid #660000;
+            border-bottom: 2px solid #660000;
+        }
+
+        .banner-led span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrollLED 10s linear infinite;
+            text-shadow: 0 0 6px yellow;
+        }
+
+        @keyframes scrollLED {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-100%); }
+        }
+
+        /* CONTENUTO */
+        .container {
+            text-align: center;
+            padding: 10px;
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .container h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        a.button {
+            display: block;
+            margin: 8px auto;
+            padding: 10px;
+            background: #004d00;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 17px;
+            width: 80%;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 6px;
+            background: #0f2f0f;
+            color: #ccc;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        /* 🎵 PULSANTE MUSICA */
+        #music-toggle {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: #004d00;
+            color: white;
+            padding: 10px 12px;
+            border-radius: 50px;
+            font-size: 20px;
+            z-index: 999999;
+            border: 2px solid white;
+        }
+    </style>
+
+    <script>
+        function openMenu() {
+            document.getElementById("sidebar").style.width = "220px";
+        }
+        function closeMenu() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+
+        /* 🎵 MUSICA LOCALE */
+        let music = null;
+
+        function toggleMusic() {
+            if (!music) {
+                music = new Audio("/static/musica.mp3");
+                music.loop = true;
+                music.volume = 0.5;
+            }
+
+            if (music.paused) {
+                music.play().then(() => {
+                    document.getElementById("music-toggle").innerHTML = "🔇";
+                }).catch(() => {
+                    alert("Tocca di nuovo il pulsante per avviare la musica");
+                });
+            } else {
+                music.pause();
+                document.getElementById("music-toggle").innerHTML = "🎵";
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- MENU -->
+    <div id="sidebar">
+        <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
+        <a href="/">🏠 Home</a>
+        <a href="/menu">🍽️ Menu & Preordina</a>
+        <a href="/istruzioni">📘 Istruzioni</a>
+        <a href="/info">ℹ️ Info Festa</a>
+        <a href="/contatti">📞 Contatti</a>
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <span class="menu-icon" onclick="openMenu()">☰</span>
+        <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
+        <h1>FESTA DEGLI ALPINI SCHILPARIO</h1>
+    </div>
+
+    <!-- BANNER LED -->
+    <div class="banner-led">
+        <span>🎉 Benvenuti alla Festa degli Alpini di Schilpario! 🍻 Buon divertimento! 🎶</span>
+    </div>
+
+    <!-- CONTENUTO -->
+    <div class="container">
+        <h2>Seleziona una sezione:</h2>
+
+        <a class="button" href="/menu">🍽️ Vai al Menu e Preordina</a>
+        <a class="button" href="/istruzioni">📘 Istruzioni</a>
+        <a class="button" href="/info">ℹ️ Info Festa</a>
+        <a class="button" href="/contatti">📞 Contatti</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © Festa degli Alpini Schilpario
+    </div>
+
+    <!-- 🎵 PULSANTE MUSICA -->
+    <button id="music-toggle" onclick="toggleMusic()">🎵</button>
+
+</body>
+</html>
