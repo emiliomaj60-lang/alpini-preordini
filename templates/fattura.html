@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Riepilogo Ordine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            padding: 0;
+            background: #2e6b2f;
+            color: white;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* MENU LATERALE */
+        #sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 3000;
+            top: 0;
+            left: 0;
+            background: #0f2f0f;
+            overflow-x: hidden;
+            transition: 0.4s;
+            padding-top: 60px;
+        }
+
+        #sidebar a {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            border-bottom: 1px solid #2e6b2f;
+        }
+
+        #sidebar a:hover {
+            background: #2e6b2f;
+        }
+
+        .menu-icon {
+            font-size: 32px;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+
+        /* HEADER */
+        .header {
+            background: #2e6b2f;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header img {
+            max-height: 60px;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* CONTENITORE BIANCO CENTRATO */
+        .contenitore {
+            background: white;
+            color: black;
+            width: 82%;
+            max-width: 400px;
+            margin: 25px auto;
+            padding: 20px;
+            border-radius: 26px;
+            box-shadow: 0 0 14px rgba(0,0,0,0.5);
+            border: 3px solid #1f4d1f;
+
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .titolo {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e6b2f;
+        }
+
+        .numero {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #d40000;
+            margin-bottom: 15px;
+        }
+
+        .info {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px; /* TESTI PIÙ PICCOLI */
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        th {
+            background: #2e6b2f;
+            color: white;
+            font-size: 14px;
+        }
+
+        .totale {
+            text-align: right;
+            font-size: 20px; /* PIÙ PICCOLO */
+            font-weight: bold;
+            margin-top: 15px;
+            color: #2e6b2f;
+        }
+    </style>
+
+    <script>
+        function openMenu() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+        function closeMenu() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- MENU LATERALE -->
+<div id="sidebar">
+    <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
+    <a href="/">🏠 Home</a>
+    <a href="/menu">🍽️ Menu & Preordina</a>
+    <a href="/istruzioni">📘 Istruzioni</a>
+    <a href="/contatti">📞 Contatti</a>
+</div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <span class="menu-icon" onclick="openMenu()">☰</span>
+        <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
+        <h1>RIEPILOGO PREORDINE</h1>
+    </div>
+
+    <!-- CONTENUTO -->
+    <div class="contenitore">
+
+        <div class="titolo">RIEPILOGO PREORDINE</div>
+        <div class="numero">N° {{ numero }}</div>
+
+        <div class="info"><b>Cliente:</b> {{ cliente }}</div>
+        <div class="info"><b>Tavolo:</b> {{ tavolo }}</div>
+        <div class="info"><b>Coperti:</b> {{ coperti }}</div>
+
+        <table>
+            <tr>
+                <th>Pietanza</th>
+                <th>Q.tà</th>
+                <th>Prezzo</th>
+                <th>Totale</th>
+            </tr>
+
+            {% for r in ordine %}
+            <tr>
+                <td>{{ r.nome }}</td>
+                <td>{{ r.qta }}</td>
+                <td>{{ "%.2f"|format(r.prezzo) }}€</td>
+                <td>{{ "%.2f"|format(r.qta * r.prezzo) }}€</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="totale">
+            Totale ordine: {{ "%.2f"|format(totale) }} €
+        </div>
+
+    </div>
+
+</body>
+</html>
