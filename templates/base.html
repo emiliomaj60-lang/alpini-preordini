@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Festa Alpini{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Icone personalizzate -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icon-32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icon-192.png') }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icon-512.png') }}">
+    <meta name="theme-color" content="#1f4d1f">
+
+    <!-- Stili base -->
+    <style>
+        body {
+            background: #1f4d1f;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .text {
+            font-size: 16px;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+        a {
+            color: #fff;
+            text-decoration: underline;
+        }
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #fff;
+            color: #1f4d1f;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
