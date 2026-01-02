@@ -4,4 +4,7 @@ ISTRUZIONI PER L'USO
 2. Seleziona il tavolo.
 3. Inserisci il numero di coperti.
 4. Scegli le pietanze e le quantità.
+
 5. Premi "Invia ordine".
+
+prova
