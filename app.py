@@ -89,9 +89,17 @@ def menu():
                                totale=totale)
     return render_template("menu.html", menu=menu_items)
 
+# -------------------------------
+# CONTATTI (lettura da contatti.txt)
+# -------------------------------
 @app.route("/contatti")
 def contatti():
-    return render_template("contatti.html")
+    try:
+        with open("contatti.txt", "r", encoding="utf-8") as f:
+            testo = f.read()
+    except FileNotFoundError:
+        testo = "File contatti.txt non trovato."
+    return render_template("contatti.html", testo=testo)
 
 @app.route("/istruzioni")
 def istruzioni():
