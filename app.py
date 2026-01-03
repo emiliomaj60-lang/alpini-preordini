@@ -1,15 +1,47 @@
 from flask import Flask, render_template, request
-import os, json, re
+import os, json, re, base64, requests
 
 app = Flask(__name__)
 
+# Cartella locale (opzionale)
 FOLDER = "FILE_PREORDINI"
 os.makedirs(FOLDER, exist_ok=True)
 
+# File contatore
 COUNTER_FILE = "counter.json"
 if not os.path.exists(COUNTER_FILE):
     with open(COUNTER_FILE, "w") as f:
         json.dump({"counter": 0}, f)
+
+# -------------------------------
+# CONFIGURAZIONE GITHUB
+# -------------------------------
+GITHUB_REPO = "emiliomaj60-lang/emiliodati"
+GITHUB_PATH = "FILE_PREORDINI"
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")  # su Render va messo nelle Environment Variables
+
+def upload_to_github(filename, content):
+    """Carica un file CSV su GitHub tramite API."""
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_PATH}/{filename}"
+
+    encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
+
+    data = {
+        "message": f"Nuovo ordine: {filename}",
+        "content": encoded
+    }
+
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json"
+    }
+
+    response = requests.put(url, json=data, headers=headers)
+
+    if response.status_code not in [200, 201]:
+        print("ERRORE UPLOAD GITHUB:", response.text)
+    else:
+        print("Ordine caricato su GitHub:", filename)
 
 # -------------------------------
 # FUNZIONI
@@ -39,14 +71,21 @@ def sanitize_filename(name):
 
 def save_order(cliente, tavolo, coperti, items, numero):
     cliente_clean = sanitize_filename(cliente)
-    filename = f"{FOLDER}/{numero}_{cliente_clean}.csv"
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write("NOME,VALORE\n")
-        f.write(f"NOME_UTENTE,{cliente}\n")
-        f.write(f"TAVOLO,{tavolo}\n")
-        f.write(f"COPERTI,{coperti}\n")
-        for nome, qta in items:
-            f.write(f"{nome},{qta}\n")
+    filename = f"{numero}_{cliente_clean}.csv"
+
+    contenuto = "NOME,VALORE\n"
+    contenuto += f"NOME_UTENTE,{cliente}\n"
+    contenuto += f"TAVOLO,{tavolo}\n"
+    contenuto += f"COPERTI,{coperti}\n"
+    for nome, qta in items:
+        contenuto += f"{nome},{qta}\n"
+
+    # Salvataggio locale (opzionale)
+    with open(f"{FOLDER}/{filename}", "w", encoding="utf-8") as f:
+        f.write(contenuto)
+
+    # Upload su GitHub
+    upload_to_github(filename, contenuto)
 
 # -------------------------------
 # ROUTES
@@ -89,9 +128,6 @@ def menu():
                                totale=totale)
     return render_template("menu.html", menu=menu_items)
 
-# -------------------------------
-# CONTATTI (lettura da contatti.txt)
-# -------------------------------
 @app.route("/contatti")
 def contatti():
     try:
