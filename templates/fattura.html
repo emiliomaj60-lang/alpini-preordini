@@ -4,10 +4,9 @@
     <title>Riepilogo Ordine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icone personalizzate -->
-    <link rel="icon" type="image/jpg" sizes="32x32" href="{{ url_for('static', filename='icon.jpg') }}">
-    <link rel="icon" type="image/jpg" sizes="192x192" href="{{ url_for('static', filename='icon.jpg') }}">
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icon.jpg') }}">
+    <!-- Icona unica -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
     <meta name="theme-color" content="#1f4d1f">
 
     <style>
@@ -131,7 +130,7 @@
         th, td {
             padding: 8px;
             border-bottom: 1px solid #ccc;
-            font-size: 14px; /* TESTI PIÙ PICCOLI */
+            font-size: 14px;
             text-align: center;
             word-wrap: break-word;
         }
@@ -144,7 +143,7 @@
 
         .totale {
             text-align: right;
-            font-size: 20px; /* PIÙ PICCOLO */
+            font-size: 20px;
             font-weight: bold;
             margin-top: 15px;
             color: #2e6b2f;
@@ -163,7 +162,7 @@
 
 <body>
 
-    <!-- MENU LATERALE -->
+<!-- MENU LATERALE -->
 <div id="sidebar">
     <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
     <a href="/">🏠 Home</a>
@@ -172,46 +171,46 @@
     <a href="/contatti">📞 Contatti</a>
 </div>
 
-    <!-- HEADER -->
-    <div class="header">
-        <span class="menu-icon" onclick="openMenu()">☰</span>
-        <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
-        <h1>RIEPILOGO PREORDINE</h1>
+<!-- HEADER -->
+<div class="header">
+    <span class="menu-icon" onclick="openMenu()">☰</span>
+    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
+    <h1>RIEPILOGO PREORDINE</h1>
+</div>
+
+<!-- CONTENUTO -->
+<div class="contenitore">
+
+    <div class="titolo">RIEPILOGO PREORDINE</div>
+    <div class="numero">N° {{ numero }}</div>
+
+    <div class="info"><b>Cliente:</b> {{ cliente }}</div>
+    <div class="info"><b>Tavolo:</b> {{ tavolo }}</div>
+    <div class="info"><b>Coperti:</b> {{ coperti }}</div>
+
+    <table>
+        <tr>
+            <th>Pietanza</th>
+            <th>Q.tà</th>
+            <th>Prezzo</th>
+            <th>Totale</th>
+        </tr>
+
+        {% for r in ordine %}
+        <tr>
+            <td>{{ r.nome }}</td>
+            <td>{{ r.qta }}</td>
+            <td>{{ "%.2f"|format(r.prezzo) }}€</td>
+            <td>{{ "%.2f"|format(r.qta * r.prezzo) }}€</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="totale">
+        Totale ordine: {{ "%.2f"|format(totale) }} €
     </div>
 
-    <!-- CONTENUTO -->
-    <div class="contenitore">
-
-        <div class="titolo">RIEPILOGO PREORDINE</div>
-        <div class="numero">N° {{ numero }}</div>
-
-        <div class="info"><b>Cliente:</b> {{ cliente }}</div>
-        <div class="info"><b>Tavolo:</b> {{ tavolo }}</div>
-        <div class="info"><b>Coperti:</b> {{ coperti }}</div>
-
-        <table>
-            <tr>
-                <th>Pietanza</th>
-                <th>Q.tà</th>
-                <th>Prezzo</th>
-                <th>Totale</th>
-            </tr>
-
-            {% for r in ordine %}
-            <tr>
-                <td>{{ r.nome }}</td>
-                <td>{{ r.qta }}</td>
-                <td>{{ "%.2f"|format(r.prezzo) }}€</td>
-                <td>{{ "%.2f"|format(r.qta * r.prezzo) }}€</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <div class="totale">
-            Totale ordine: {{ "%.2f"|format(totale) }} €
-        </div>
-
-    </div>
+</div>
 
 </body>
 </html>

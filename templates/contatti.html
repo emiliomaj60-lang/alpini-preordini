@@ -1,29 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
+    <meta charset="UTF-8">
+    <title>Contatti</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='icon.jpg') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.jpg') }}">
-     <meta name="theme-color" content="#1f4d1f">
+
+    <!-- Icona unica -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
+    <meta name="theme-color" content="#1f4d1f">
 
     <style>
         body {
             background: #1f4d1f;
             color: white;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 10px;
+            padding: 15px;
         }
 
         h2 {
             text-align: center;
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .box {
+            background: #0f2f0f;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #2e6b2f;
+            max-width: 500px;
+            margin: auto;
         }
 
         .text {
-            font-size: 16px;
-            line-height: 1.4;
+            font-size: 17px;
+            line-height: 1.5;
+            white-space: pre-line; /* IMPORTANTE: mantiene gli a capo del file txt */
         }
     </style>
 </head>
@@ -32,11 +46,11 @@
 
 <h2>Contatti</h2>
 
-<p class="text">
-📞 Telefono: <b>333 1234567</b><br>
-📧 Email: <b>alpini@schilpario.it</b><br>
-🌐 Sito: <b>www.alpinischilpario.it</b>
-</p>
+<div class="box">
+    <p class="text">
+        {{ testo }}
+    </p>
+</div>
 
 </body>
 </html>

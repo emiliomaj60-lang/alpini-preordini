@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <title>Preordine Alpini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icone personalizzate -->
-    <link rel="icon" type="image/jpg" sizes="32x32" href="{{ url_for('static', filename='icon.jpg') }}">
-    <link rel="icon" type="image/jpg" sizes="192x192" href="{{ url_for('static', filename='icon.jpg') }}">
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icon.jpg') }}">
+    <!-- Icona unica -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
     <meta name="theme-color" content="#1f4d1f">
 
     <style>
@@ -18,8 +17,6 @@
             background: #2e6b2f;
             color: white;
             overflow-x: hidden;
-
-            /* EVITA CHE LO SCROLL NASCONDA ELEMENTI FISSI */
             overscroll-behavior: none;
         }
 
@@ -81,37 +78,31 @@
             font-weight: bold;
         }
 
-        /* TOTALE SEMPRE VISIBILE IN ALTO A DESTRA */
+        /* TOTALE SEMPRE VISIBILE */
         #totale-alto {
             position: fixed;
             top: 0;
             right: 0;
-
             margin-top: calc(10px + env(safe-area-inset-top));
             margin-right: calc(10px + env(safe-area-inset-right));
-
             background: #004d00;
             padding: 10px 15px;
             border-radius: 12px;
-
             font-size: 18px;
             font-weight: bold;
             color: yellow;
-
-            z-index: 999999; /* SOPRA TUTTO */
-
-            /* FIX professionali per tastiera e scroll */
+            z-index: 999999;
             transform: translateZ(0);
             will-change: transform;
             pointer-events: none;
         }
 
-        /* CONTENUTO SCORREVOLE */
+        /* CONTENUTO */
         .contenuto {
             padding: 20px;
             padding-bottom: 200px;
             position: relative;
-            z-index: 1; /* evita che tocchi il totale */
+            z-index: 1;
         }
 
         .riga {
@@ -159,7 +150,6 @@
             font-size: 22px;
             z-index: 3000;
             text-align: center;
-
             transform: translateZ(0);
         }
     </style>
@@ -210,7 +200,7 @@
 
 <body>
 
-    <!-- MENU LATERALE -->
+<!-- MENU LATERALE -->
 <div id="sidebar">
     <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
     <a href="/">🏠 Home</a>
@@ -219,51 +209,51 @@
     <a href="/contatti">📞 Contatti</a>
 </div>
 
-    <!-- TOTALE SEMPRE VISIBILE -->
-    <div id="totale-alto">Tot: 0.00 €</div>
+<!-- TOTALE SEMPRE VISIBILE -->
+<div id="totale-alto">Tot: 0.00 €</div>
 
-    <!-- HEADER -->
-    <div class="header">
-        <span class="menu-icon" onclick="openMenu()">☰</span>
-        <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
-        <h1>PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
-    </div>
+<!-- HEADER -->
+<div class="header">
+    <span class="menu-icon" onclick="openMenu()">☰</span>
+    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
+    <h1>PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
+</div>
 
-    <!-- CONTENUTO -->
-    <div class="contenuto">
+<!-- CONTENUTO -->
+<div class="contenuto">
 
-        <form method="POST">
+    <form method="POST">
 
-            <label>Nome cliente:</label><br>
-            <input type="text" name="cliente" required><br><br>
+        <label>Nome cliente:</label><br>
+        <input type="text" name="cliente" required><br><br>
 
-            <label>Tavolo:</label><br>
-            <input type="number" name="tavolo" required><br><br>
+        <label>Tavolo:</label><br>
+        <input type="number" name="tavolo" required><br><br>
 
-            <label>Coperti:</label><br>
-            <input type="number" name="coperti" required><br><br>
+        <label>Coperti:</label><br>
+        <input type="number" name="coperti" required><br><br>
 
-            {% for item in menu %}
-                <div class="riga">
-                    <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
-                    <input
-                        type="number"
-                        class="qta qta-box"
-                        name="{{ item['nome'] }}"
-                        min="0"
-                        step="1"
-                        oninput="aggiornaTotale()"
-                        onchange="aggiornaTotale()"
-                    >
-                </div>
-            {% endfor %}
+        {% for item in menu %}
+            <div class="riga">
+                <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
+                <input
+                    type="number"
+                    class="qta qta-box"
+                    name="{{ item['nome'] }}"
+                    min="0"
+                    step="1"
+                    oninput="aggiornaTotale()"
+                    onchange="aggiornaTotale()"
+                >
+            </div>
+        {% endfor %}
 
-        </form>
+    </form>
 
-    </div>
+</div>
 
-    <!-- PULSANTE SEMPRE VISIBILE -->
-    <button id="pulsante-fisso" onclick="document.forms[0].submit()">Invia ordine</button>
+<!-- PULSANTE SEMPRE VISIBILE -->
+<button id="pulsante-fisso" onclick="document.forms[0].submit()">Invia ordine</button>
 
 </body>
 </html>
