@@ -1,16 +1,11 @@
-ISTRUZIONI PER FARE UN PREORDINE
-
 1. SCEGLI UN TAVOLO E OCCUPALO.
 
 2. Inserisci il nome del CLIENTE.
 3. Inserisci il numero del TAVOLO 
      (scelto in precedenza).
 4. Inserisci il numero dei COPERTI.
-
 5. Scegli le pietanze e le quantità.
-
 6. Premi "INVIA PREORDINE".
-
 Si passerà a una schermata tipo "FATTURA" dove:
   comparirà il riassunto del PREORDINE inviato con:
   il NUMERO del preordine, seguito dal NOME del cliente 
@@ -28,4 +23,5 @@ N.B.  Il numero del PREORDINE NON SARA' lo stesso dello scontrino
 SARA' LO SCONTRINO RICEVUTO IN CASSA ILRIFERIMENTO PER LA DISTRIBUZIONE.
 
     Grazie e Buon Appetito.
+
 
