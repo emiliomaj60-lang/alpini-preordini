@@ -93,7 +93,6 @@
             color: yellow;
             z-index: 999999;
             transform: translateZ(0);
-            will-change: transform;
             pointer-events: none;
         }
 
@@ -117,17 +116,20 @@
             width: 70%;
         }
 
+        /* NUOVA DIMENSIONE CELLE QUANTITÀ */
         .qta-box {
-            width: 60px;
+            width: 35px;       /* più piccola */
             padding: 5px;
-            font-size: 16px;
+            font-size: 18px;
+            text-align: center;
         }
 
-        input[type=text], input[type=number] {
-            width: 100%;
-            padding: 8px;
-            background: white;
-            color: black;
+        /* NUOVA DIMENSIONE TAVOLO E COPERTI */
+        .input-small {
+            width: 80px;
+            padding: 6px;
+            font-size: 18px;
+            text-align: center;
         }
 
         /* CAMPO NON VALIDO */
@@ -149,17 +151,12 @@
             font-size: 22px;
             z-index: 3000;
             text-align: center;
-            transform: translateZ(0);
         }
     </style>
 
     <script>
-        function openMenu() {
-            document.getElementById("sidebar").style.width = "250px";
-        }
-        function closeMenu() {
-            document.getElementById("sidebar").style.width = "0";
-        }
+        function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
+        function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
 
         function aggiornaTotale() {
             var totale = 0;
@@ -167,15 +164,8 @@
 
             for (var i = 0; i < campi.length; i++) {
                 var campo = campi[i];
-                var prezzoAttr = campo.getAttribute("data-prezzo");
-                var prezzo = parseFloat(prezzoAttr);
-                if (isNaN(prezzo)) prezzo = 0;
-
-                var valore = campo.value;
-                if (!valore) valore = "0";
-                var qta = parseInt(valore);
-                if (isNaN(qta)) qta = 0;
-
+                var prezzo = parseFloat(campo.getAttribute("data-prezzo")) || 0;
+                var qta = parseInt(campo.value) || 0;
                 totale += qta * prezzo;
             }
 
@@ -195,11 +185,8 @@
             }
         });
 
-        // -------------------------------
         // VALIDAZIONE COMPLETA
-        // -------------------------------
         function validaForm() {
-            // Rimuove errori precedenti
             let tutti = document.querySelectorAll(".errore");
             tutti.forEach(el => el.classList.remove("errore"));
 
@@ -207,46 +194,34 @@
             let nome = form["cliente"];
             let tavolo = form["tavolo"];
             let coperti = form["coperti"];
-
             let primoErrore = null;
 
-            // --- VALIDAZIONE NOME ---
             if (nome.value.trim() === "") {
                 nome.classList.add("errore");
                 primoErrore = primoErrore || nome;
             }
 
-            // --- VALIDAZIONE TAVOLO ---
             if (tavolo.value.trim() === "" || parseInt(tavolo.value) <= 0) {
                 tavolo.classList.add("errore");
                 primoErrore = primoErrore || tavolo;
             }
 
-            // --- VALIDAZIONE COPERTI ---
             if (coperti.value.trim() === "" || parseInt(coperti.value) <= 0) {
                 coperti.classList.add("errore");
                 primoErrore = primoErrore || coperti;
             }
 
-            // --- VALIDAZIONE PIATTI ---
             let campi = document.getElementsByClassName("qta");
             let almenoUno = false;
 
-            for (let i = 0; i < campi.length; i++) {
-                let campo = campi[i];
-                let valore = campo.value.trim();
+            for (let campo of campi) {
+                let qta = parseInt(campo.value);
 
-                if (valore !== "") {
-                    let qta = parseInt(valore);
+                if (!isNaN(qta) && qta > 0) almenoUno = true;
 
-                    if (isNaN(qta) || qta < 0 || qta > 9) {
-                        campo.classList.add("errore");
-                        primoErrore = primoErrore || campo;
-                    }
-
-                    if (qta > 0) {
-                        almenoUno = true;
-                    }
+                if (!isNaN(qta) && (qta < 0 || qta > 9)) {
+                    campo.classList.add("errore");
+                    primoErrore = primoErrore || campo;
                 }
             }
 
@@ -255,7 +230,6 @@
                 return false;
             }
 
-            // --- SCROLL AL PRIMO ERRORE ---
             if (primoErrore) {
                 primoErrore.scrollIntoView({ behavior: "smooth", block: "center" });
                 alert("Controlla i campi evidenziati in rosso");
@@ -297,10 +271,10 @@
         <input type="text" name="cliente" required><br><br>
 
         <label>Tavolo:</label><br>
-        <input type="number" name="tavolo" required><br><br>
+        <input type="number" name="tavolo" class="input-small" required><br><br>
 
         <label>Coperti:</label><br>
-        <input type="number" name="coperti" required><br><br>
+        <input type="number" name="coperti" class="input-small" required><br><br>
 
         {% for item in menu %}
             <div class="riga">
