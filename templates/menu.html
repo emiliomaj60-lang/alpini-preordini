@@ -116,17 +116,35 @@
             width: 70%;
         }
 
-        /* NUOVA DIMENSIONE CELLE QUANTITÀ */
+        /* QUANTITÀ PIATTI (1 cifra) */
         .qta-box {
-            width: 35px;       /* più piccola */
+            width: 35px;
             padding: 5px;
             font-size: 18px;
             text-align: center;
         }
 
-        /* NUOVA DIMENSIONE TAVOLO E COPERTI */
-        .input-small {
-            width: 80px;
+        /* NOME CLIENTE PIÙ ALTO */
+        .input-nome {
+            width: 100%;
+            padding: 14px;
+            font-size: 20px;
+            text-transform: uppercase;
+            background: white;
+            color: black;
+        }
+
+        /* TAVOLO (1–999) */
+        .input-tavolo {
+            width: 70px;
+            padding: 6px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* COPERTI (1–99) */
+        .input-coperti {
+            width: 60px;
             padding: 6px;
             font-size: 18px;
             text-align: center;
@@ -185,7 +203,7 @@
             }
         });
 
-        // VALIDAZIONE COMPLETA
+        // VALIDAZIONE COMPLETA + SCRITTA "COPIA"
         function validaForm() {
             let tutti = document.querySelectorAll(".errore");
             tutti.forEach(el => el.classList.remove("errore"));
@@ -196,21 +214,34 @@
             let coperti = form["coperti"];
             let primoErrore = null;
 
+            // --- SCRITTA COPIA ---
+            let ultimoNome = localStorage.getItem("ultimo_nome_cliente");
+            if (ultimoNome && ultimoNome === nome.value.trim().toUpperCase()) {
+                nome.value = nome.value.trim().toUpperCase() + " (COPIA)";
+            }
+            localStorage.setItem("ultimo_nome_cliente", nome.value.trim().toUpperCase());
+
+            // --- VALIDAZIONE NOME ---
             if (nome.value.trim() === "") {
                 nome.classList.add("errore");
                 primoErrore = primoErrore || nome;
             }
 
-            if (tavolo.value.trim() === "" || parseInt(tavolo.value) <= 0) {
+            // --- VALIDAZIONE TAVOLO (1–999) ---
+            let tav = parseInt(tavolo.value);
+            if (isNaN(tav) || tav < 1 || tav > 999) {
                 tavolo.classList.add("errore");
                 primoErrore = primoErrore || tavolo;
             }
 
-            if (coperti.value.trim() === "" || parseInt(coperti.value) <= 0) {
+            // --- VALIDAZIONE COPERTI (1–99) ---
+            let cop = parseInt(coperti.value);
+            if (isNaN(cop) || cop < 1 || cop > 99) {
                 coperti.classList.add("errore");
                 primoErrore = primoErrore || coperti;
             }
 
+            // --- VALIDAZIONE PIATTI ---
             let campi = document.getElementsByClassName("qta");
             let almenoUno = false;
 
@@ -268,13 +299,13 @@
     <form method="POST">
 
         <label>Nome cliente:</label><br>
-        <input type="text" name="cliente" required><br><br>
+        <input type="text" name="cliente" class="input-nome" required><br><br>
 
         <label>Tavolo:</label><br>
-        <input type="number" name="tavolo" class="input-small" required><br><br>
+        <input type="number" name="tavolo" class="input-tavolo" min="1" max="999" required><br><br>
 
         <label>Coperti:</label><br>
-        <input type="number" name="coperti" class="input-small" required><br><br>
+        <input type="number" name="coperti" class="input-coperti" min="1" max="99" required><br><br>
 
         {% for item in menu %}
             <div class="riga">
