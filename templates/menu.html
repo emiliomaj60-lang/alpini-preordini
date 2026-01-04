@@ -261,6 +261,17 @@
             }
         });
 
+        /* BLOCCO LETTERE E LIMITO A 1–9 */
+        function limitaQta(event) {
+            let v = event.target.value;
+
+            v = v.replace(/[^0-9]/g, "");   // rimuove tutto ciò che non è numero
+            if (v.length > 1) v = v[0];     // solo una cifra
+            if (v === "0") v = "";          // niente zero
+
+            event.target.value = v;
+        }
+
         /* POPUP */
         function mostraPopup(testo) {
             document.getElementById("popup-text").innerHTML = testo;
@@ -324,7 +335,7 @@
 
                 if (!isNaN(qta) && qta > 0) almenoUno = true;
 
-                if (!isNaN(qta) && (qta < 0 || qta > 9)) {
+                if (!isNaN(qta) && (qta < 1 || qta > 9)) {
                     campo.classList.add("errore");
                     primoErrore = primoErrore || campo;
                 }
@@ -397,14 +408,11 @@
             <div class="riga">
                 <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
                 <input
-                    type="number"
+                    type="text"
                     class="qta qta-box"
                     name="{{ item['nome'] }}"
-                    min="0"
-                    max="9"
-                    step="1"
-                    oninput="aggiornaTotale()"
-                    onchange="aggiornaTotale()"
+                    maxlength="1"
+                    oninput="limitaQta(event); aggiornaTotale()"
                 >
             </div>
         {% endfor %}
