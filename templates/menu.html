@@ -118,36 +118,40 @@
 
         /* QUANTITÀ PIATTI (1 cifra) */
         .qta-box {
-            width: 35px;
-            padding: 5px;
-            font-size: 18px;
+            width: 32px;
+            padding: 4px;
+            font-size: 16px;
             text-align: center;
         }
 
-        /* NOME CLIENTE PIÙ ALTO */
+        /* NOME CLIENTE leggermente più alto dell’originale */
         .input-nome {
             width: 100%;
-            padding: 14px;
-            font-size: 20px;
+            padding: 10px;
+            font-size: 18px;
             text-transform: uppercase;
             background: white;
             color: black;
         }
 
-        /* TAVOLO (1–999) */
+        /* TAVOLO (1–999) - compatto */
         .input-tavolo {
-            width: 70px;
-            padding: 6px;
-            font-size: 18px;
+            width: 60px;
+            padding: 4px;
+            font-size: 16px;
             text-align: center;
+            background: white;
+            color: black;
         }
 
-        /* COPERTI (1–99) */
+        /* COPERTI (1–99) - compatto */
         .input-coperti {
-            width: 60px;
-            padding: 6px;
-            font-size: 18px;
+            width: 50px;
+            padding: 4px;
+            font-size: 16px;
             text-align: center;
+            background: white;
+            color: black;
         }
 
         /* CAMPO NON VALIDO */
@@ -203,8 +207,14 @@
             }
         });
 
-        // VALIDAZIONE COMPLETA + SCRITTA "COPIA"
+        // VALIDAZIONE COMPLETA + BLOCCO DOPPIO INVIO
         function validaForm() {
+            // blocco secondo invio dallo stesso telefono
+            if (localStorage.getItem("preordine_inviato") === "1") {
+                alert("Preordine già inviato, puoi modificare il tuo ordine quando sei in cassa");
+                return false;
+            }
+
             let tutti = document.querySelectorAll(".errore");
             tutti.forEach(el => el.classList.remove("errore"));
 
@@ -213,13 +223,6 @@
             let tavolo = form["tavolo"];
             let coperti = form["coperti"];
             let primoErrore = null;
-
-            // --- SCRITTA COPIA ---
-            let ultimoNome = localStorage.getItem("ultimo_nome_cliente");
-            if (ultimoNome && ultimoNome === nome.value.trim().toUpperCase()) {
-                nome.value = nome.value.trim().toUpperCase() + " (COPIA)";
-            }
-            localStorage.setItem("ultimo_nome_cliente", nome.value.trim().toUpperCase());
 
             // --- VALIDAZIONE NOME ---
             if (nome.value.trim() === "") {
@@ -267,6 +270,8 @@
                 return false;
             }
 
+            // se è tutto ok, segno che questo telefono ha già inviato
+            localStorage.setItem("preordine_inviato", "1");
             return true;
         }
     </script>
