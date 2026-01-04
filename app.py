@@ -3,49 +3,93 @@ import os, json, re, base64, requests
 
 app = Flask(__name__)
 
-# Cartella locale (opzionale)
-FOLDER = "FILE_PREORDINI"
-os.makedirs(FOLDER, exist_ok=True)
-
-# File contatore
-COUNTER_FILE = "counter.json"
-if not os.path.exists(COUNTER_FILE):
-    with open(COUNTER_FILE, "w") as f:
-        json.dump({"counter": 0}, f)
-
 # -------------------------------
 # CONFIGURAZIONE GITHUB
 # -------------------------------
 GITHUB_REPO = "emiliomaj60-lang/emiliodati"
 GITHUB_PATH = "FILE_PREORDINI"
+GITHUB_COUNTER = "counter.json"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")  # su Render va messo nelle Environment Variables
 
-def upload_to_github(filename, content):
-    """Carica un file CSV su GitHub tramite API."""
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_PATH}/{filename}"
+HEADERS = {
+    "Authorization": f"Bearer {GITHUB_TOKEN}",
+    "Accept": "application/vnd.github+json"
+}
+
+# -------------------------------
+# FUNZIONI GITHUB
+# -------------------------------
+
+def github_get_file(path):
+    """Legge un file da GitHub e restituisce (contenuto, sha)."""
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
+    r = requests.get(url, headers=HEADERS)
+
+    if r.status_code == 200:
+        data = r.json()
+        content = base64.b64decode(data["content"]).decode("utf-8")
+        return content, data["sha"]
+
+    return None, None
+
+
+def github_write_file(path, content, message, sha=None):
+    """Scrive o aggiorna un file su GitHub."""
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
 
     encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
 
-    data = {
-        "message": f"Nuovo ordine: {filename}",
+    payload = {
+        "message": message,
         "content": encoded
     }
 
-    headers = {
-        "Authorization": f"Bearer {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github+json"
-    }
+    if sha:
+        payload["sha"] = sha
 
-    response = requests.put(url, json=data, headers=headers)
+    r = requests.put(url, headers=HEADERS, json=payload)
 
-    if response.status_code not in [200, 201]:
-        print("ERRORE UPLOAD GITHUB:", response.text)
-    else:
-        print("Ordine caricato su GitHub:", filename)
+    if r.status_code not in [200, 201]:
+        print("ERRORE SCRITTURA GITHUB:", r.text)
+
 
 # -------------------------------
-# FUNZIONI
+# COUNTER SU GITHUB
 # -------------------------------
+
+def get_counter():
+    """Legge counter.json da GitHub, lo crea se non esiste."""
+    content, sha = github_get_file(GITHUB_COUNTER)
+
+    if content is None:
+        # crea counter.json
+        github_write_file(GITHUB_COUNTER, '{"counter": 0}', "Create counter.json")
+        return 0, None
+
+    data = json.loads(content)
+    return data["counter"], sha
+
+
+def update_counter(new_value, sha):
+    """Aggiorna counter.json su GitHub."""
+    content = json.dumps({"counter": new_value})
+    github_write_file(GITHUB_COUNTER, content, f"Update counter to {new_value}", sha)
+
+
+# -------------------------------
+# UPLOAD ORDINI SU GITHUB
+# -------------------------------
+
+def upload_to_github(filename, content):
+    """Carica un file CSV su GitHub tramite API."""
+    path = f"{GITHUB_PATH}/{filename}"
+    github_write_file(path, content, f"Nuovo ordine: {filename}")
+
+
+# -------------------------------
+# FUNZIONI LOCALI
+# -------------------------------
+
 def get_menu():
     menu = []
     try:
@@ -58,16 +102,10 @@ def get_menu():
         menu = []
     return menu
 
-def get_counter():
-    with open(COUNTER_FILE, "r") as f:
-        return json.load(f)["counter"]
-
-def update_counter(new_value):
-    with open(COUNTER_FILE, "w") as f:
-        json.dump({"counter": new_value}, f)
 
 def sanitize_filename(name):
     return re.sub(r"[^A-Za-z0-9]", "", name)
+
 
 def save_order(cliente, tavolo, coperti, items, numero):
     cliente_clean = sanitize_filename(cliente)
@@ -80,23 +118,22 @@ def save_order(cliente, tavolo, coperti, items, numero):
     for nome, qta in items:
         contenuto += f"{nome},{qta}\n"
 
-    # Salvataggio locale (opzionale)
-    with open(f"{FOLDER}/{filename}", "w", encoding="utf-8") as f:
-        f.write(contenuto)
-
-    # Upload su GitHub
     upload_to_github(filename, contenuto)
+
 
 # -------------------------------
 # ROUTES
 # -------------------------------
+
 @app.route("/")
 def home():
     return render_template("home.html")
 
-@app.route("/menu", methods=["GET","POST"])
+
+@app.route("/menu", methods=["GET", "POST"])
 def menu():
     menu_items = get_menu()
+
     if request.method == "POST":
         cliente = request.form["cliente"]
         tavolo = request.form["tavolo"]
@@ -104,6 +141,7 @@ def menu():
 
         ordine = []
         totale = 0
+
         for item in menu_items:
             qta = request.form.get(item["nome"], "0")
             if qta.strip() != "" and int(qta) > 0:
@@ -115,8 +153,11 @@ def menu():
                 })
                 totale += qta * item["prezzo"]
 
-        numero = get_counter() + 1
-        update_counter(numero)
+        # --- COUNTER SU GITHUB ---
+        counter, sha = get_counter()
+        numero = counter + 1
+        update_counter(numero, sha)
+
         save_order(cliente, tavolo, coperti, [(o["nome"], o["qta"]) for o in ordine], numero)
 
         return render_template("fattura.html",
@@ -126,7 +167,9 @@ def menu():
                                coperti=coperti,
                                ordine=ordine,
                                totale=totale)
+
     return render_template("menu.html", menu=menu_items)
+
 
 @app.route("/contatti")
 def contatti():
@@ -137,6 +180,7 @@ def contatti():
         testo = "File contatti.txt non trovato."
     return render_template("contatti.html", testo=testo)
 
+
 @app.route("/istruzioni")
 def istruzioni():
     try:
@@ -145,6 +189,7 @@ def istruzioni():
     except FileNotFoundError:
         testo = "File istruzioni.txt non trovato."
     return render_template("istruzioni.html", testo=testo)
+
 
 @app.route("/info")
 def info():
@@ -155,9 +200,10 @@ def info():
         testo = "File info_festa.txt non trovato."
     return render_template("info.html", testo=testo)
 
+
 # -------------------------------
 # AVVIO SERVER
 # -------------------------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # compatibile con Render
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
