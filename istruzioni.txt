@@ -1,6 +1,6 @@
 ISTRUZIONI PER LA EFFETTUARE IL PREORDINE
 
-1. SCEGLITE UN TAVOLO E OCCUPATELO SE POSSIBILE.
+1. SCEGLITE UN TAVOLO E OCCUPATELO.
 
 2. Inserisci il nome del CLIENTE.
 3. Inserisci il numero del TAVOLO (scelto in precedenza).
@@ -11,15 +11,19 @@ ISTRUZIONI PER LA EFFETTUARE IL PREORDINE
 6. Premi "INVIA PREORDINE".
 
 Si passerà a una schermata tipo "FATTURA" dove:
-  comparirà il riassuntivo del PREORDINE inviato con:
+  comparirà il riassunto del PREORDINE inviato con:
   il NUMERO del preordine, seguito dal NOME del cliente 
   e la lista delle pietanze scelte e il costo totale.
+  (Il NUMERO del preordine e il NOME, Vi serviranno
+  in cassa per risalire al vostro preordine).
 
 Conservate questa schermata che userete in cassa al momento
-  del pagamento con la POSSIBILITA' di EVENTUALI MODIFICHE.
+  del pagamento per un ulteriore verifica e con la 
+  POSSIBILITA' di EVENTUALI MODIFICHE.
 
 N.B.  Il numero del PREORDINE NON SARA' lo stesso dello scontrino
       che riceverete in cassa. 
 
-Sarà la scontrino ricevuto in cassa quello a cui si farà riferimento.
+SARA' LO SCONTRINO RICEVUTO IN CASSA ILRIFERIMENTO PER LA DISTRIBUZIONE.
 
+    Grazie e Buon Appetito.
