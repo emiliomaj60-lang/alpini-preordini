@@ -92,7 +92,6 @@
             font-weight: bold;
             color: yellow;
             z-index: 999999;
-            transform: translateZ(0);
             pointer-events: none;
         }
 
@@ -100,8 +99,6 @@
         .contenuto {
             padding: 20px;
             padding-bottom: 200px;
-            position: relative;
-            z-index: 1;
         }
 
         .riga {
@@ -235,13 +232,12 @@
         function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
 
         function aggiornaTotale() {
-            var totale = 0;
-            var campi = document.getElementsByClassName("qta");
+            let totale = 0;
+            let campi = document.getElementsByClassName("qta");
 
-            for (var i = 0; i < campi.length; i++) {
-                var campo = campi[i];
-                var prezzo = parseFloat(campo.getAttribute("data-prezzo")) || 0;
-                var qta = parseInt(campo.value) || 0;
+            for (let campo of campi) {
+                let prezzo = parseFloat(campo.getAttribute("data-prezzo")) || 0;
+                let qta = parseInt(campo.value) || 0;
                 totale += qta * prezzo;
             }
 
@@ -250,13 +246,11 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            var prezzi = {{ menu | tojson }};
-            for (var i = 0; i < prezzi.length; i++) {
-                var nome = prezzi[i]["nome"];
-                var prezzo = prezzi[i]["prezzo"];
-                var campi = document.getElementsByName(nome);
+            let prezzi = {{ menu | tojson }};
+            for (let item of prezzi) {
+                let campi = document.getElementsByName(item.nome);
                 if (campi.length > 0) {
-                    campi[0].setAttribute("data-prezzo", prezzo);
+                    campi[0].setAttribute("data-prezzo", item.prezzo);
                 }
             }
         });
@@ -265,7 +259,7 @@
         function limitaQta(event) {
             let v = event.target.value;
 
-            v = v.replace(/[^0-9]/g, "");   // rimuove tutto ciò che non è numero
+            v = v.replace(/[^0-9]/g, "");   // solo numeri
             if (v.length > 1) v = v[0];     // solo una cifra
             if (v === "0") v = "";          // niente zero
 
@@ -292,6 +286,15 @@
                 tapCount = 0;
             }
             setTimeout(() => tapCount = 0, 800);
+        }
+
+        /* POPUP DI CONFERMA INVIO */
+        function confermaInvio(callback) {
+            mostraPopup("Preordine inviato con successo!<br>A breve vedrai la tua fattura.");
+            setTimeout(() => {
+                chiudiPopup();
+                callback();
+            }, 1000);
         }
 
         /* VALIDAZIONE COMPLETA */
@@ -422,7 +425,11 @@
 </div>
 
 <!-- PULSANTE SEMPRE VISIBILE -->
-<button id="pulsante-fisso" onclick="if(validaForm()) document.forms[0].submit()">Invia Preordine</button>
+<button id="pulsante-fisso" onclick="
+    if (validaForm()) {
+        confermaInvio(() => document.forms[0].submit());
+    }
+">Invia Preordine</button>
 
 <!-- POPUP ELEGANTE -->
 <div id="popup">
