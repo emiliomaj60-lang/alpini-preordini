@@ -1,9 +1,10 @@
-ISTRUZIONI PER LA EFFETTUARE IL PREORDINE
+ISTRUZIONI PER FARE UN PREORDINE
 
-1. SCEGLITE UN TAVOLO E OCCUPATELO.
+1. SCEGLI UN TAVOLO E OCCUPALO.
 
 2. Inserisci il nome del CLIENTE.
-3. Inserisci il numero del TAVOLO (scelto in precedenza).
+3. Inserisci il numero del TAVOLO 
+     (scelto in precedenza).
 4. Inserisci il numero dei COPERTI.
 
 5. Scegli le pietanze e le quantità.
@@ -27,3 +28,4 @@ N.B.  Il numero del PREORDINE NON SARA' lo stesso dello scontrino
 SARA' LO SCONTRINO RICEVUTO IN CASSA ILRIFERIMENTO PER LA DISTRIBUZIONE.
 
     Grazie e Buon Appetito.
+
