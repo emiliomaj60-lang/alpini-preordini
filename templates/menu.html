@@ -212,4 +212,197 @@
             font-size: 18px;
         }
 
-        @keyframes popup
+        @keyframes popupFade {
+            from { transform: scale(0.8); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+    </style>
+
+    <script>
+        function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
+        function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
+
+        function aggiornaTotale() {
+            var totale = 0;
+            var campi = document.getElementsByClassName("qta");
+
+            for (var i = 0; i < campi.length; i++) {
+                var campo = campi[i];
+                var prezzo = parseFloat(campo.getAttribute("data-prezzo")) || 0;
+                var qta = parseInt(campo.value) || 0;
+                totale += qta * prezzo;
+            }
+
+            document.getElementById("totale-alto").innerHTML =
+                "Tot: " + totale.toFixed(2) + " €";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var prezzi = {{ menu | tojson }};
+            for (var i = 0; i < prezzi.length; i++) {
+                var nome = prezzi[i]["nome"];
+                var prezzo = prezzi[i]["prezzo"];
+                var campi = document.getElementsByName(nome);
+                if (campi.length > 0) {
+                    campi[0].setAttribute("data-prezzo", prezzo);
+                }
+            }
+        });
+
+        /* POPUP */
+        function mostraPopup(testo) {
+            document.getElementById("popup-text").innerHTML = testo;
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        function chiudiPopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        /* VIA DI FUGA (triplo tap) */
+        let tapCount = 0;
+        function tapSblocco() {
+            tapCount++;
+            if (tapCount >= 3) {
+                localStorage.removeItem("preordine_inviato");
+                mostraPopup("Preordine sbloccato, puoi inviare un nuovo ordine");
+                tapCount = 0;
+            }
+            setTimeout(() => tapCount = 0, 800);
+        }
+
+        /* VALIDAZIONE COMPLETA */
+        function validaForm() {
+            if (localStorage.getItem("preordine_inviato") === "1") {
+                mostraPopup("Preordine già inviato, puoi modificare il tuo ordine quando sei in cassa");
+                return false;
+            }
+
+            let tutti = document.querySelectorAll(".errore");
+            tutti.forEach(el => el.classList.remove("errore"));
+
+            let form = document.forms[0];
+            let nome = form["cliente"];
+            let tavolo = form["tavolo"];
+            let coperti = form["coperti"];
+            let primoErrore = null;
+
+            if (nome.value.trim() === "") {
+                nome.classList.add("errore");
+                primoErrore = primoErrore || nome;
+            }
+
+            let tav = parseInt(tavolo.value);
+            if (isNaN(tav) || tav < 1 || tav > 999) {
+                tavolo.classList.add("errore");
+                primoErrore = primoErrore || tavolo;
+            }
+
+            let cop = parseInt(coperti.value);
+            if (isNaN(cop) || cop < 1 || cop > 99) {
+                coperti.classList.add("errore");
+                primoErrore = primoErrore || coperti;
+            }
+
+            let campi = document.getElementsByClassName("qta");
+            let almenoUno = false;
+
+            for (let campo of campi) {
+                let qta = parseInt(campo.value);
+
+                if (!isNaN(qta) && qta > 0) almenoUno = true;
+
+                if (!isNaN(qta) && (qta < 0 || qta > 9)) {
+                    campo.classList.add("errore");
+                    primoErrore = primoErrore || campo;
+                }
+            }
+
+            if (!almenoUno) {
+                mostraPopup("Inserisci almeno 1 piatto con quantità da 1 a 9");
+                return false;
+            }
+
+            if (primoErrore) {
+                primoErrore.scrollIntoView({ behavior: "smooth", block: "center" });
+                mostraPopup("Controlla i campi evidenziati in rosso");
+                return false;
+            }
+
+            localStorage.setItem("preordine_inviato", "1");
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+
+<!-- MENU LATERALE -->
+<div id="sidebar">
+    <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
+    <a href="/">🏠 Home</a>
+    <a href="/menu">🍽️ Menu & Preordina</a>
+    <a href="/istruzioni">📘 Istruzioni</a>
+    <a href="/contatti">📞 Contatti</a>
+</div>
+
+<!-- TOTALE SEMPRE VISIBILE -->
+<div id="totale-alto">Tot: 0.00 €</div>
+
+<!-- HEADER -->
+<div class="header">
+    <span class="menu-icon" onclick="openMenu()">☰</span>
+
+    <!-- TAP SUL TITOLO = SBLOCCO -->
+    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg" onclick="tapSblocco()">
+
+    <h1 onclick="tapSblocco()">PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
+</div>
+
+<!-- CONTENUTO -->
+<div class="contenuto">
+
+    <form method="POST">
+
+        <label>Nome cliente:</label><br>
+        <input type="text" name="cliente" class="input-nome" required><br><br>
+
+        <label>Tavolo:</label><br>
+        <input type="number" name="tavolo" class="input-tavolo" min="1" max="999" required><br><br>
+
+        <label>Coperti:</label><br>
+        <input type="number" name="coperti" class="input-coperti" min="1" max="99" required><br><br>
+
+        {% for item in menu %}
+            <div class="riga">
+                <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
+                <input
+                    type="number"
+                    class="qta qta-box"
+                    name="{{ item['nome'] }}"
+                    min="0"
+                    max="9"
+                    step="1"
+                    oninput="aggiornaTotale()"
+                    onchange="aggiornaTotale()"
+                >
+            </div>
+        {% endfor %}
+
+    </form>
+
+</div>
+
+<!-- PULSANTE SEMPRE VISIBILE -->
+<button id="pulsante-fisso" onclick="if(validaForm()) document.forms[0].submit()">Invia Preordine</button>
+
+<!-- POPUP ELEGANTE -->
+<div id="popup">
+    <div class="popup-box">
+        <div id="popup-text"></div>
+        <button onclick="chiudiPopup()" class="popup-btn">OK</button>
+    </div>
+</div>
+
+</body>
+</html>
