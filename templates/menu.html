@@ -123,18 +123,17 @@
             font-size: 16px;
         }
 
-        input[type=text] {
+        input[type=text], input[type=number] {
             width: 100%;
             padding: 8px;
-            text-transform: uppercase;
             background: white;
             color: black;
         }
 
-        input[type=number] {
-            padding: 5px;
-            background: white;
-            color: black;
+        /* CAMPO NON VALIDO */
+        .errore {
+            border: 3px solid red !important;
+            background: #ffe6e6 !important;
         }
 
         /* PULSANTE FISSO IN BASSO */
@@ -195,6 +194,76 @@
                 }
             }
         });
+
+        // -------------------------------
+        // VALIDAZIONE COMPLETA
+        // -------------------------------
+        function validaForm() {
+            // Rimuove errori precedenti
+            let tutti = document.querySelectorAll(".errore");
+            tutti.forEach(el => el.classList.remove("errore"));
+
+            let form = document.forms[0];
+            let nome = form["cliente"];
+            let tavolo = form["tavolo"];
+            let coperti = form["coperti"];
+
+            let primoErrore = null;
+
+            // --- VALIDAZIONE NOME ---
+            if (nome.value.trim() === "") {
+                nome.classList.add("errore");
+                primoErrore = primoErrore || nome;
+            }
+
+            // --- VALIDAZIONE TAVOLO ---
+            if (tavolo.value.trim() === "" || parseInt(tavolo.value) <= 0) {
+                tavolo.classList.add("errore");
+                primoErrore = primoErrore || tavolo;
+            }
+
+            // --- VALIDAZIONE COPERTI ---
+            if (coperti.value.trim() === "" || parseInt(coperti.value) <= 0) {
+                coperti.classList.add("errore");
+                primoErrore = primoErrore || coperti;
+            }
+
+            // --- VALIDAZIONE PIATTI ---
+            let campi = document.getElementsByClassName("qta");
+            let almenoUno = false;
+
+            for (let i = 0; i < campi.length; i++) {
+                let campo = campi[i];
+                let valore = campo.value.trim();
+
+                if (valore !== "") {
+                    let qta = parseInt(valore);
+
+                    if (isNaN(qta) || qta < 0 || qta > 9) {
+                        campo.classList.add("errore");
+                        primoErrore = primoErrore || campo;
+                    }
+
+                    if (qta > 0) {
+                        almenoUno = true;
+                    }
+                }
+            }
+
+            if (!almenoUno) {
+                alert("Inserisci almeno 1 piatto con quantità da 1 a 9");
+                return false;
+            }
+
+            // --- SCROLL AL PRIMO ERRORE ---
+            if (primoErrore) {
+                primoErrore.scrollIntoView({ behavior: "smooth", block: "center" });
+                alert("Controlla i campi evidenziati in rosso");
+                return false;
+            }
+
+            return true;
+        }
     </script>
 </head>
 
@@ -241,6 +310,7 @@
                     class="qta qta-box"
                     name="{{ item['nome'] }}"
                     min="0"
+                    max="9"
                     step="1"
                     oninput="aggiornaTotale()"
                     onchange="aggiornaTotale()"
@@ -253,7 +323,7 @@
 </div>
 
 <!-- PULSANTE SEMPRE VISIBILE -->
-<button id="pulsante-fisso" onclick="document.forms[0].submit()">Invia Preordine</button>
+<button id="pulsante-fisso" onclick="if(validaForm()) document.forms[0].submit()">Invia Preordine</button>
 
 </body>
 </html>
