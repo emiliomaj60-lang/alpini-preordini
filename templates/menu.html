@@ -288,13 +288,20 @@
             setTimeout(() => tapCount = 0, 800);
         }
 
-        /* POPUP DI CONFERMA INVIO */
+        /* CALLBACK PER INVIO DOPO OK */
+        let invioCallback = null;
+
         function confermaInvio(callback) {
-            mostraPopup("Preordine inviato con successo!<br>A breve vedrai la tua fattura.");
-            setTimeout(() => {
-                chiudiPopup();
-                callback();
-            }, 1000);
+            invioCallback = callback;
+            mostraPopup("Preordine inviato con successo!<br>Premi OK per continuare.");
+        }
+
+        function popupOk() {
+            chiudiPopup();
+            if (invioCallback) {
+                invioCallback();
+                invioCallback = null;
+            }
         }
 
         /* VALIDAZIONE COMPLETA */
@@ -435,7 +442,7 @@
 <div id="popup">
     <div class="popup-box">
         <div id="popup-text"></div>
-        <button onclick="chiudiPopup()" class="popup-btn">OK</button>
+        <button onclick="popupOk()" class="popup-btn">OK</button>
     </div>
 </div>
 
