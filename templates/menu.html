@@ -124,7 +124,7 @@
             text-align: center;
         }
 
-        /* NOME CLIENTE leggermente più alto dell’originale */
+        /* NOME CLIENTE leggermente più alto */
         .input-nome {
             width: 100%;
             padding: 10px;
@@ -134,7 +134,7 @@
             color: black;
         }
 
-        /* TAVOLO (1–999) - compatto */
+        /* TAVOLO (1–999) */
         .input-tavolo {
             width: 60px;
             padding: 4px;
@@ -144,7 +144,7 @@
             color: black;
         }
 
-        /* COPERTI (1–99) - compatto */
+        /* COPERTI (1–99) */
         .input-coperti {
             width: 50px;
             padding: 4px;
@@ -174,166 +174,42 @@
             z-index: 3000;
             text-align: center;
         }
-    </style>
 
-    <script>
-        function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
-        function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
-
-        function aggiornaTotale() {
-            var totale = 0;
-            var campi = document.getElementsByClassName("qta");
-
-            for (var i = 0; i < campi.length; i++) {
-                var campo = campi[i];
-                var prezzo = parseFloat(campo.getAttribute("data-prezzo")) || 0;
-                var qta = parseInt(campo.value) || 0;
-                totale += qta * prezzo;
-            }
-
-            document.getElementById("totale-alto").innerHTML =
-                "Tot: " + totale.toFixed(2) + " €";
+        /* POPUP ELEGANTE */
+        #popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999999;
+            backdrop-filter: blur(4px);
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            var prezzi = {{ menu | tojson }};
-            for (var i = 0; i < prezzi.length; i++) {
-                var nome = prezzi[i]["nome"];
-                var prezzo = prezzi[i]["prezzo"];
-                var campi = document.getElementsByName(nome);
-                if (campi.length > 0) {
-                    campi[0].setAttribute("data-prezzo", prezzo);
-                }
-            }
-        });
-
-        // VALIDAZIONE COMPLETA + BLOCCO DOPPIO INVIO
-        function validaForm() {
-            // blocco secondo invio dallo stesso telefono
-            if (localStorage.getItem("preordine_inviato") === "1") {
-                alert("Preordine già inviato, puoi modificare il tuo ordine quando sei in cassa");
-                return false;
-            }
-
-            let tutti = document.querySelectorAll(".errore");
-            tutti.forEach(el => el.classList.remove("errore"));
-
-            let form = document.forms[0];
-            let nome = form["cliente"];
-            let tavolo = form["tavolo"];
-            let coperti = form["coperti"];
-            let primoErrore = null;
-
-            // --- VALIDAZIONE NOME ---
-            if (nome.value.trim() === "") {
-                nome.classList.add("errore");
-                primoErrore = primoErrore || nome;
-            }
-
-            // --- VALIDAZIONE TAVOLO (1–999) ---
-            let tav = parseInt(tavolo.value);
-            if (isNaN(tav) || tav < 1 || tav > 999) {
-                tavolo.classList.add("errore");
-                primoErrore = primoErrore || tavolo;
-            }
-
-            // --- VALIDAZIONE COPERTI (1–99) ---
-            let cop = parseInt(coperti.value);
-            if (isNaN(cop) || cop < 1 || cop > 99) {
-                coperti.classList.add("errore");
-                primoErrore = primoErrore || coperti;
-            }
-
-            // --- VALIDAZIONE PIATTI ---
-            let campi = document.getElementsByClassName("qta");
-            let almenoUno = false;
-
-            for (let campo of campi) {
-                let qta = parseInt(campo.value);
-
-                if (!isNaN(qta) && qta > 0) almenoUno = true;
-
-                if (!isNaN(qta) && (qta < 0 || qta > 9)) {
-                    campo.classList.add("errore");
-                    primoErrore = primoErrore || campo;
-                }
-            }
-
-            if (!almenoUno) {
-                alert("Inserisci almeno 1 piatto con quantità da 1 a 9");
-                return false;
-            }
-
-            if (primoErrore) {
-                primoErrore.scrollIntoView({ behavior: "smooth", block: "center" });
-                alert("Controlla i campi evidenziati in rosso");
-                return false;
-            }
-
-            // se è tutto ok, segno che questo telefono ha già inviato
-            localStorage.setItem("preordine_inviato", "1");
-            return true;
+        .popup-box {
+            background: white;
+            color: black;
+            padding: 25px;
+            width: 80%;
+            max-width: 350px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 18px;
+            animation: popupFade 0.25s ease-out;
         }
-    </script>
-</head>
 
-<body>
+        .popup-btn {
+            margin-top: 18px;
+            padding: 10px 20px;
+            background: #2e6b2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+        }
 
-<!-- MENU LATERALE -->
-<div id="sidebar">
-    <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
-    <a href="/">🏠 Home</a>
-    <a href="/menu">🍽️ Menu & Preordina</a>
-    <a href="/istruzioni">📘 Istruzioni</a>
-    <a href="/contatti">📞 Contatti</a>
-</div>
-
-<!-- TOTALE SEMPRE VISIBILE -->
-<div id="totale-alto">Tot: 0.00 €</div>
-
-<!-- HEADER -->
-<div class="header">
-    <span class="menu-icon" onclick="openMenu()">☰</span>
-    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
-    <h1>PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
-</div>
-
-<!-- CONTENUTO -->
-<div class="contenuto">
-
-    <form method="POST">
-
-        <label>Nome cliente:</label><br>
-        <input type="text" name="cliente" class="input-nome" required><br><br>
-
-        <label>Tavolo:</label><br>
-        <input type="number" name="tavolo" class="input-tavolo" min="1" max="999" required><br><br>
-
-        <label>Coperti:</label><br>
-        <input type="number" name="coperti" class="input-coperti" min="1" max="99" required><br><br>
-
-        {% for item in menu %}
-            <div class="riga">
-                <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
-                <input
-                    type="number"
-                    class="qta qta-box"
-                    name="{{ item['nome'] }}"
-                    min="0"
-                    max="9"
-                    step="1"
-                    oninput="aggiornaTotale()"
-                    onchange="aggiornaTotale()"
-                >
-            </div>
-        {% endfor %}
-
-    </form>
-
-</div>
-
-<!-- PULSANTE SEMPRE VISIBILE -->
-<button id="pulsante-fisso" onclick="if(validaForm()) document.forms[0].submit()">Invia Preordine</button>
-
-</body>
-</html>
+        @keyframes popup
