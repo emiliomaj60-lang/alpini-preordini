@@ -187,10 +187,15 @@
             alert("Fattura salvata correttamente!");
         }
 
+        /* SALVA IN PDF (usa la stampa del telefono) */
+        function salvaPDF() {
+            window.print();
+        }
+
         /* CHIUDI PROGRAMMA */
         function chiudiProgramma() {
-            window.location.href = "/";  // Torna alla home
-            setTimeout(() => window.close(), 300); // Prova a chiudere la pagina
+            window.location.href = "/";
+            setTimeout(() => window.close(), 300);
         }
     </script>
 </head>
@@ -248,6 +253,7 @@
     <!-- BOTTONI -->
     <div class="bottoni">
         <button class="btn" onclick="salvaFattura()">💾 Salva Fattura</button>
+        <button class="btn" onclick="salvaPDF()">📄 Salva in PDF</button>
         <button class="btn" onclick="chiudiProgramma()">❌ Chiudi Programma</button>
     </div>
 
