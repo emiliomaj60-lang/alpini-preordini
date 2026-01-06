@@ -180,13 +180,6 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        /* SALVA FATTURA */
-        function salvaFattura() {
-            const contenuto = document.documentElement.outerHTML;
-            localStorage.setItem("fattura_salvata", contenuto);
-            alert("Fattura salvata correttamente!");
-        }
-
         /* SALVA IN PDF (usa la stampa del telefono) */
         function salvaPDF() {
             window.print();
@@ -252,7 +245,6 @@
 
     <!-- BOTTONI -->
     <div class="bottoni">
-        <button class="btn" onclick="salvaFattura()">💾 Salva Fattura</button>
         <button class="btn" onclick="salvaPDF()">📄 Salva in PDF</button>
         <button class="btn" onclick="chiudiProgramma()">❌ Chiudi Programma</button>
     </div>
