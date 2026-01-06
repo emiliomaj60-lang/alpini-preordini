@@ -2,26 +2,26 @@
 
 2. Inserisci il nome del CLIENTE.
 3. Inserisci il numero del TAVOLO 
-     (scelto in precedenza).
+......(scelto in precedenza).
 4. Inserisci il numero dei COPERTI.
 5. Scegli le pietanze e le quantità.
 6. Premi "INVIA PREORDINE".
-Si passerà a una schermata tipo "FATTURA" dove:
-  comparirà il riassunto del PREORDINE inviato con:
-  il NUMERO del preordine, seguito dal NOME del cliente 
-  e la lista delle pietanze scelte e il costo totale.
-  (Il NUMERO del preordine e il NOME, Vi serviranno
-  in cassa per risalire al vostro preordine).
+Si passerà a una schermata "FATTURA" dove:
+comparirà il riassunto del PREORDINE inviato con:
+il NUMERO del preordine, seguito dal NOME
+del cliente e la lista delle pietanze 
+scelte e il costo totale.
+(Il NUMERO del preordine e il NOME,
+Vi serviranno in cassa per risalire al vostro preordine).
 
-Conservate questa schermata che userete in cassa al momento
-  del pagamento per un ulteriore verifica e con la 
-  POSSIBILITA' di EVENTUALI MODIFICHE.
+Conservate questa schermata che userete in cassa
+al momento del pagamento per un ulteriore verifica
+e con la POSSIBILITA' di EVENTUALI MODIFICHE.
 
-N.B.  Il numero del PREORDINE NON SARA' lo stesso dello scontrino
-      che riceverete in cassa. 
+N.B.  Il numero del PREORDINE NON SARA' 
+lo stesso dello scontrino che riceverete in cassa. 
 
 SARA' LO SCONTRINO RICEVUTO IN CASSA ILRIFERIMENTO PER LA DISTRIBUZIONE.
 
     Grazie e Buon Appetito.
-
 
