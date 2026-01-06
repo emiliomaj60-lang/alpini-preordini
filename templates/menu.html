@@ -121,7 +121,7 @@
             text-align: center;
         }
 
-        /* NOME CLIENTE più piccolo */
+        /* NOME CLIENTE */
         .input-nome {
             width: 100%;
             padding: 6px;
@@ -131,7 +131,7 @@
             color: black;
         }
 
-        /* TAVOLO (1–999) */
+        /* TAVOLO */
         .input-tavolo {
             width: 60px;
             padding: 4px;
@@ -141,7 +141,7 @@
             color: black;
         }
 
-        /* COPERTI (1–99) */
+        /* COPERTI */
         .input-coperti {
             width: 50px;
             padding: 4px;
@@ -184,7 +184,7 @@
             text-align: center;
         }
 
-        /* POPUP ELEGANTE */
+        /* POPUP */
         #popup {
             position: fixed;
             top: 0;
@@ -276,7 +276,7 @@
             document.getElementById("popup").style.display = "none";
         }
 
-        /* VIA DI FUGA (triplo tap) */
+        /* SBLOCCO TRIPLO TAP */
         let tapCount = 0;
         function tapSblocco() {
             tapCount++;
@@ -386,7 +386,6 @@
 <div class="header">
     <span class="menu-icon" onclick="openMenu()">☰</span>
 
-    <!-- TAP SUL TITOLO = SBLOCCO -->
     <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg" onclick="tapSblocco()">
 
     <h1 onclick="tapSblocco()">PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
@@ -398,18 +397,43 @@
     <form method="POST">
 
         <label>Nome cliente:</label><br>
-        <input type="text" name="cliente" class="input-nome" required><br><br>
+        <input 
+            type="text"
+            name="cliente"
+            class="input-nome"
+            inputmode="latin-name"
+            autocapitalize="characters"
+            autocomplete="off"
+            style="text-transform: uppercase;"
+            required
+        ><br><br>
 
         <div class="riga-due-colonne">
 
             <div class="colonna">
                 <label>Tavolo:</label><br>
-                <input type="number" name="tavolo" class="input-tavolo" min="1" max="999" required>
+                <input 
+                    type="text"
+                    name="tavolo"
+                    class="input-tavolo"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    autocomplete="off"
+                    required
+                >
             </div>
 
             <div class="colonna">
                 <label>Coperti:</label><br>
-                <input type="number" name="coperti" class="input-coperti" min="1" max="99" required>
+                <input 
+                    type="text"
+                    name="coperti"
+                    class="input-coperti"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    autocomplete="off"
+                    required
+                >
             </div>
 
         </div>
@@ -421,6 +445,8 @@
                     type="text"
                     class="qta qta-box"
                     name="{{ item['nome'] }}"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
                     maxlength="1"
                     oninput="limitaQta(event); aggiornaTotale()"
                 >
@@ -438,7 +464,7 @@
     }
 ">Invia Preordine</button>
 
-<!-- POPUP ELEGANTE -->
+<!-- POPUP -->
 <div id="popup">
     <div class="popup-box">
         <div id="popup-text"></div>
