@@ -125,14 +125,10 @@ def save_order(cliente, tavolo, coperti, items, numero):
 # ROUTES
 # -------------------------------
 
+
 @app.route("/")
 def home():
-    return "Railway funziona!"
-
-
-#@app.route("/")
-#def home():
- #   return render_template("home.html")
+    return render_template("home.html")
 
 
 @app.route("/menu", methods=["GET", "POST"])
