@@ -148,6 +148,28 @@
             margin-top: 15px;
             color: #2e6b2f;
         }
+
+        /* BOTTONI */
+        .bottoni {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .btn {
+            background: #2e6b2f;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 18px;
+            margin: 10px 0;
+            width: 90%;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1f4d1f;
+        }
     </style>
 
     <script>
@@ -156,6 +178,19 @@
         }
         function closeMenu() {
             document.getElementById("sidebar").style.width = "0";
+        }
+
+        /* SALVA FATTURA */
+        function salvaFattura() {
+            const contenuto = document.documentElement.outerHTML;
+            localStorage.setItem("fattura_salvata", contenuto);
+            alert("Fattura salvata correttamente!");
+        }
+
+        /* CHIUDI PROGRAMMA */
+        function chiudiProgramma() {
+            window.location.href = "/";  // Torna alla home
+            setTimeout(() => window.close(), 300); // Prova a chiudere la pagina
         }
     </script>
 </head>
@@ -208,6 +243,12 @@
 
     <div class="totale">
         Totale ordine: {{ "%.2f"|format(totale) }} €
+    </div>
+
+    <!-- BOTTONI -->
+    <div class="bottoni">
+        <button class="btn" onclick="salvaFattura()">💾 Salva Fattura</button>
+        <button class="btn" onclick="chiudiProgramma()">❌ Chiudi Programma</button>
     </div>
 
 </div>
