@@ -170,6 +170,25 @@
         .btn:hover {
             background: #1f4d1f;
         }
+
+        /* 🔥 NASCONDI ELEMENTI SOLO NEL PDF/STAMPA */
+        @media print {
+
+            /* Nasconde il logo */
+            .header img {
+                display: none !important;
+            }
+
+            /* Nasconde la scritta RIEPILOGO PREORDINE */
+            .header h1 {
+                display: none !important;
+            }
+
+            /* Nasconde il menu (tre lineette) */
+            .menu-icon {
+                display: none !important;
+            }
+        }
     </style>
 
     <script>
