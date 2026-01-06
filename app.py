@@ -127,7 +127,12 @@ def save_order(cliente, tavolo, coperti, items, numero):
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return "Railway funziona!"
+
+
+#@app.route("/")
+#def home():
+ #   return render_template("home.html")
 
 
 @app.route("/menu", methods=["GET", "POST"])
