@@ -404,6 +404,7 @@
             inputmode="latin-name"
             autocapitalize="characters"
             autocomplete="off"
+            maxlength="10"
             style="text-transform: uppercase;"
             required
         ><br><br>
@@ -458,9 +459,11 @@
 </div>
 
 <!-- PULSANTE SEMPRE VISIBILE -->
+
 <button id="pulsante-fisso" onclick="
     if (validaForm()) {
-        confermaInvio(() => document.forms[0].submit());
+        document.forms[0].submit();
+        setTimeout(() => mostraPopup('Preordine inviato con successo!'), 300);
     }
 ">Invia Preordine</button>
 
