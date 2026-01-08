@@ -4,11 +4,21 @@
     <title>Festa Alpini - Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icona unica -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
-    <meta name="theme-color" content="#1f4d1f">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" href="/static/icon.png">
+    <meta name="theme-color" content="#0a4a2a">
 
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" href="/static/icon.png">
+    <meta name="theme-color" content="#0a4a2a">
+
+    <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/static/sw.js");
+    }
+    </script>
+
+    
     <style>
         body {
             font-family: Arial;
