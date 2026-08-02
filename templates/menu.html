@@ -4,7 +4,6 @@
     <title>Preordine Alpini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icona unica -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
     <meta name="theme-color" content="#1f4d1f">
@@ -20,7 +19,6 @@
             overscroll-behavior: none;
         }
 
-        /* MENU LATERALE */
         #sidebar {
             height: 100%;
             width: 0;
@@ -56,7 +54,6 @@
             top: 10px;
         }
 
-        /* HEADER */
         .header {
             position: sticky;
             top: 0;
@@ -78,7 +75,6 @@
             font-weight: bold;
         }
 
-        /* TOTALE SEMPRE VISIBILE */
         #totale-alto {
             position: fixed;
             top: 0;
@@ -95,7 +91,6 @@
             pointer-events: none;
         }
 
-        /* CONTENUTO */
         .contenuto {
             padding: 20px;
             padding-bottom: 200px;
@@ -113,7 +108,6 @@
             width: 70%;
         }
 
-        /* QUANTITÀ PIATTI (1 cifra) */
         .qta-box {
             width: 25px;
             padding: 4px;
@@ -121,7 +115,6 @@
             text-align: center;
         }
 
-        /* NOME CLIENTE */
         .input-nome {
             width: 45%;
             padding: 6px;
@@ -131,7 +124,6 @@
             color: black;
         }
 
-        /* TAVOLO */
         .input-tavolo {
             width: 40px;
             padding: 4px;
@@ -141,7 +133,6 @@
             color: black;
         }
 
-        /* COPERTI */
         .input-coperti {
             width: 35px;
             padding: 4px;
@@ -151,7 +142,6 @@
             color: black;
         }
 
-        /* DUE COLONNE */
         .riga-due-colonne {
             display: flex;
             justify-content: space-between;
@@ -163,13 +153,11 @@
             flex: 1;
         }
 
-        /* CAMPO NON VALIDO */
         .errore {
             border: 3px solid red !important;
             background: #ffe6e6 !important;
         }
 
-        /* PULSANTE FISSO IN BASSO */
         #pulsante-fisso {
             position: fixed;
             bottom: 0;
@@ -184,7 +172,6 @@
             text-align: center;
         }
 
-        /* POPUP */
         #popup {
             position: fixed;
             top: 0;
@@ -255,18 +242,14 @@
             }
         });
 
-        /* BLOCCO LETTERE E LIMITO A 1–9 */
         function limitaQta(event) {
             let v = event.target.value;
-
-            v = v.replace(/[^0-9]/g, "");   // solo numeri
-            if (v.length > 1) v = v[0];     // solo una cifra
-            if (v === "0") v = "";          // niente zero
-
+            v = v.replace(/[^0-9]/g, "");
+            if (v.length > 1) v = v[0];
+            if (v === "0") v = "";
             event.target.value = v;
         }
 
-        /* POPUP */
         function mostraPopup(testo) {
             document.getElementById("popup-text").innerHTML = testo;
             document.getElementById("popup").style.display = "flex";
@@ -276,53 +259,20 @@
             document.getElementById("popup").style.display = "none";
         }
 
-        /* SBLOCCO TRIPLO TAP */
-        let tapCount = 0;
-        function tapSblocco() {
-            tapCount++;
-            if (tapCount >= 3) {
-                localStorage.removeItem("preordine_inviato");
-                mostraPopup("Preordine sbloccato, puoi inviare un nuovo ordine");
-                tapCount = 0;
-            }
-            setTimeout(() => tapCount = 0, 800);
-        }
-
-        /* CALLBACK PER INVIO DOPO OK */
-        let invioCallback = null;
-
-        function confermaInvio(callback) {
-            invioCallback = callback;
-            mostraPopup("Preordine inviato con successo!<br>Premi OK per continuare.");
-        }
-
-        function popupOk() {
-            chiudiPopup();
-            if (invioCallback) {
-                invioCallback();
-                invioCallback = null;
-            }
-        }
-
-        /* VALIDAZIONE COMPLETA */
         function validaForm() {
-            if (localStorage.getItem("preordine_inviato") === "1") {
-                mostraPopup("Preordine già inviato, puoi modificare il tuo ordine quando sei in cassa");
-                return false;
-            }
-
-            let tutti = document.querySelectorAll(".errore");
-            tutti.forEach(el => el.classList.remove("errore"));
-
             let form = document.forms[0];
             let nome = form["cliente"];
             let tavolo = form["tavolo"];
             let coperti = form["coperti"];
             let primoErrore = null;
 
+            nome.classList.remove("errore");
+            tavolo.classList.remove("errore");
+            coperti.classList.remove("errore");
+
             if (nome.value.trim() === "") {
                 nome.classList.add("errore");
-                primoErrore = primoErrore || nome;
+                primoErrore = nome;
             }
 
             let tav = parseInt(tavolo.value);
@@ -342,13 +292,7 @@
 
             for (let campo of campi) {
                 let qta = parseInt(campo.value);
-
                 if (!isNaN(qta) && qta > 0) almenoUno = true;
-
-                if (!isNaN(qta) && (qta < 1 || qta > 9)) {
-                    campo.classList.add("errore");
-                    primoErrore = primoErrore || campo;
-                }
             }
 
             if (!almenoUno) {
@@ -362,36 +306,37 @@
                 return false;
             }
 
-            localStorage.setItem("preordine_inviato", "1");
             return true;
         }
+
+        // 🔥 Reset automatico del form quando si torna indietro
+        window.onload = function() {
+            if (performance.navigation.type === 2) {
+                document.querySelector("form").reset();
+                document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
+            }
+        };
     </script>
 </head>
 
 <body>
 
-<!-- MENU LATERALE -->
 <div id="sidebar">
     <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
     <a href="/">🏠 Home</a>
-    <a href="/menu">🍽️ Menu & Preordina</a>
+    <a href="/menu">🍽️ Menu</a>
     <a href="/istruzioni">📘 Istruzioni</a>
     <a href="/contatti">📞 Contatti</a>
 </div>
 
-<!-- TOTALE SEMPRE VISIBILE -->
 <div id="totale-alto">Tot: 0.00 €</div>
 
-<!-- HEADER -->
 <div class="header">
     <span class="menu-icon" onclick="openMenu()">☰</span>
-
-    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg" onclick="tapSblocco()">
-
-    <h1 onclick="tapSblocco()">PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
+    <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
+    <h1>PREORDINE FESTA DEGLI ALPINI SCHILPARIO</h1>
 </div>
 
-<!-- CONTENUTO -->
 <div class="contenuto">
 
     <form method="POST">
@@ -405,7 +350,6 @@
             autocapitalize="characters"
             autocomplete="off"
             maxlength="10"
-            style="text-transform: uppercase;"
             required
         ><br><br>
 
@@ -460,20 +404,16 @@
 
 </div>
 
-<!-- PULSANTE SEMPRE VISIBILE -->
-
 <button id="pulsante-fisso" onclick="
     if (validaForm()) {
         document.forms[0].submit();
-        setTimeout(() => mostraPopup('Preordine inviato con successo!'), 300);
     }
 ">Invia Preordine</button>
 
-<!-- POPUP -->
 <div id="popup">
     <div class="popup-box">
         <div id="popup-text"></div>
-        <button onclick="popupOk()" class="popup-btn">OK</button>
+        <button onclick="chiudiPopup()" class="popup-btn">OK</button>
     </div>
 </div>
 
