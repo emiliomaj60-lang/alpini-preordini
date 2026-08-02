@@ -165,11 +165,12 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
+        /* 🎵 AUDIO DOM (necessario per autoplay su iPhone/Android) */
         let music = null;
 
         function toggleMusic() {
             if (!music) {
-                music = new Audio("/static/musica.mp3");
+                music = document.getElementById("musica");
                 music.loop = true;
                 music.volume = 0.5;
             }
@@ -190,6 +191,7 @@
 
 <body>
 
+    <!-- MENU -->
     <div id="sidebar">
         <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
         <a href="/">🏠 Home</a>
@@ -199,16 +201,19 @@
         <a href="/contatti">📞 Contatti</a>
     </div>
 
+    <!-- HEADER -->
     <div class="header">
         <span class="menu-icon" onclick="openMenu()">☰</span>
         <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
         <h1>FESTA DEGLI ALPINI SCHILPARIO</h1>
     </div>
 
+    <!-- BANNER LED -->
     <div class="banner-led">
         <span>🎉 Benvenuti alla Festa degli Alpini di Schilpario! 🍻 Buon divertimento! 🎶</span>
     </div>
 
+    <!-- CONTENUTO -->
     <div class="container">
         <h2>Seleziona una sezione:</h2>
 
@@ -218,24 +223,35 @@
         <a class="button" href="/contatti">📞 Contatti</a>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
         © Festa degli Alpini Schilpario
     </div>
 
+    <!-- 🎵 AUDIO DOM -->
+    <audio id="musica" preload="auto">
+        <source src="/static/musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 🎵 PULSANTE MUSICA -->
     <button id="music-toggle" onclick="toggleMusic()">🎵</button>
 
-    <!-- 🎵 AUTOPLAY MUSICA -->
+    <!-- 🎵 AUTOPLAY FUNZIONANTE -->
     <script>
         window.onload = function() {
-            const btn = document.getElementById("music-toggle");
+            const audio = document.getElementById("musica");
 
-            // Simula click per avviare la musica
-            btn.click();
-
-            // Secondo tentativo per Safari/iPhone
-            setTimeout(() => {
-                try { btn.click(); } catch(e) {}
-            }, 500);
+            // Primo tentativo
+            audio.play().then(() => {
+                document.getElementById("music-toggle").innerHTML = "🔇";
+            }).catch(() => {
+                // Secondo tentativo per Safari/iPhone
+                setTimeout(() => {
+                    audio.play().then(() => {
+                        document.getElementById("music-toggle").innerHTML = "🔇";
+                    }).catch(() => {});
+                }, 500);
+            });
         };
     </script>
 
