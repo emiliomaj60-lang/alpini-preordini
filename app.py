@@ -154,9 +154,8 @@ def menu():
                 })
                 totale += qta * item["prezzo"]
 
-        # --- NIENTE GITHUB, NIENTE FILE ---
-        # puoi generare un numero ordine locale se ti serve
-        numero = 1  # oppure None, oppure un timestamp
+        # 🔥 Nessun numero ordine
+        numero = None
 
         return render_template("fattura.html",
                                numero=numero,
@@ -167,6 +166,7 @@ def menu():
                                totale=totale)
 
     return render_template("menu.html", menu=menu_items)
+
 
 @app.route("/contatti")
 def contatti():
