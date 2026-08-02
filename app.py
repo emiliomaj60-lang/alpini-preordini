@@ -120,14 +120,27 @@ def save_order(cliente, tavolo, coperti, items, numero):
 
     upload_to_github(filename, contenuto)
 
+def leggi_utilizzi():
+    try:
+        with open("contatore_app.json", "r") as f:
+            data = json.load(f)
+            return data.get("utilizzi", 0)
+    except:
+        return 0
+
+def incrementa_utilizzi():
+    valore = leggi_utilizzi() + 1
+    with open("contatore_app.json", "w") as f:
+        json.dump({"utilizzi": valore}, f)
+    return valore
 
 # -------------------------------
 # ROUTES
 # -------------------------------
 
-
 @app.route("/")
 def home():
+    incrementa_utilizzi()   # 🔥 incrementa ogni volta che l’app viene aperta
     return render_template("home.html")
 
 
@@ -195,8 +208,10 @@ def info():
             testo = f.read()
     except FileNotFoundError:
         testo = "File info_festa.txt non trovato."
-    return render_template("info.html", testo=testo)
 
+    utilizzi = leggi_utilizzi()   # 🔥 legge il numero di utilizzi dell’app
+
+    return render_template("info.html", testo=testo, utilizzi=utilizzi)
 
 # -------------------------------
 # AVVIO SERVER
