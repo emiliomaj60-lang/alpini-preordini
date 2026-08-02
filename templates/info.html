@@ -29,6 +29,14 @@
             line-height: 1.4;
             white-space: pre-line; /* mantiene gli a capo del file txt */
         }
+
+        .contatore {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 18px;
+            color: #ffeb3b;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -39,6 +47,11 @@
 <p class="text">
     {{ testo }}
 </p>
+
+<!-- 🔥 Numero utilizzi dell'app -->
+<div class="contatore">
+    Numero utilizzi dell'app: {{ utilizzi }}
+</div>
 
 </body>
 </html>
