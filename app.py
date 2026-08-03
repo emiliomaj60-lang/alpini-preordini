@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 import os, json, re, base64, requests
-import json
 from datetime import datetime
 
 app = Flask(__name__)
@@ -11,7 +10,7 @@ app = Flask(__name__)
 GITHUB_REPO = "emiliomaj60-lang/emiliodati"
 GITHUB_PATH = "FILE_PREORDINI"
 GITHUB_COUNTER = "counter.json"
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")  # su Render va messo nelle Environment Variables
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 
 HEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -23,7 +22,6 @@ HEADERS = {
 # -------------------------------
 
 def github_get_file(path):
-    """Legge un file da GitHub e restituisce (contenuto, sha)."""
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
     r = requests.get(url, headers=HEADERS)
 
@@ -36,7 +34,6 @@ def github_get_file(path):
 
 
 def github_write_file(path, content, message, sha=None):
-    """Scrive o aggiorna un file su GitHub."""
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
 
     encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
@@ -60,11 +57,9 @@ def github_write_file(path, content, message, sha=None):
 # -------------------------------
 
 def get_counter():
-    """Legge counter.json da GitHub, lo crea se non esiste."""
     content, sha = github_get_file(GITHUB_COUNTER)
 
     if content is None:
-        # crea counter.json
         github_write_file(GITHUB_COUNTER, '{"counter": 0}', "Create counter.json")
         return 0, None
 
@@ -73,7 +68,6 @@ def get_counter():
 
 
 def update_counter(new_value, sha):
-    """Aggiorna counter.json su GitHub."""
     content = json.dumps({"counter": new_value})
     github_write_file(GITHUB_COUNTER, content, f"Update counter to {new_value}", sha)
 
@@ -83,7 +77,6 @@ def update_counter(new_value, sha):
 # -------------------------------
 
 def upload_to_github(filename, content):
-    """Carica un file CSV su GitHub tramite API."""
     path = f"{GITHUB_PATH}/{filename}"
     github_write_file(path, content, f"Nuovo ordine: {filename}")
 
@@ -122,43 +115,36 @@ def save_order(cliente, tavolo, coperti, items, numero):
 
     upload_to_github(filename, contenuto)
 
-def leggi_utilizzi():
-    try:
-        with open("contatore_app.json", "r") as f:
-            data = json.load(f)
-            return data.get("utilizzi", 0)
-    except:
-        return 0
 
-def incrementa_utilizzi():
-    valore = leggi_utilizzi() + 1
-    with open("contatore_app.json", "w") as f:
-        json.dump({"utilizzi": valore}, f)
-    return valore
 # --------------------------------
-# ACCESSI GIORNALIERI (LOCALE)
+# ACCESSI UNIFICATI (UN SOLO FILE)
 # --------------------------------
 
-def registra_accesso_giornaliero():
-    oggi = datetime.now().strftime("%Y-%m-%d")
-
+def leggi_accessi():
     try:
-        with open("accessi_giornalieri.json", "r") as f:
-            data = json.load(f)
-    except:
-        data = {}
-
-    data[oggi] = data.get(oggi, 0) + 1
-
-    with open("accessi_giornalieri.json", "w") as f:
-        json.dump(data, f)
-
-def leggi_accessi_giornalieri():
-    try:
-        with open("accessi_giornalieri.json", "r") as f:
+        with open("accessi.json", "r") as f:
             return json.load(f)
     except:
-        return {}
+        return {"totale": 0, "giorni": {}}
+
+
+def salva_accessi(data):
+    with open("accessi.json", "w") as f:
+        json.dump(data, f)
+
+
+def registra_accesso():
+    data = leggi_accessi()
+
+    # totale
+    data["totale"] += 1
+
+    # giornaliero
+    oggi = datetime.now().strftime("%Y-%m-%d")
+    data["giorni"][oggi] = data["giorni"].get(oggi, 0) + 1
+
+    salva_accessi(data)
+
 
 # -------------------------------
 # ROUTES
@@ -166,9 +152,9 @@ def leggi_accessi_giornalieri():
 
 @app.route("/")
 def home():
-    incrementa_utilizzi()          # 🔥 contatore totale
-    registra_accesso_giornaliero() # 🔥 contatore giornaliero
+    registra_accesso()
     return render_template("home.html")
+
 
 @app.route("/menu", methods=["GET", "POST"])
 def menu():
@@ -193,7 +179,6 @@ def menu():
                 })
                 totale += qta * item["prezzo"]
 
-        # 🔥 Nessun numero ordine
         numero = None
 
         return render_template("fattura.html",
@@ -235,15 +220,23 @@ def info():
     except FileNotFoundError:
         testo = "File info_festa.txt non trovato."
 
-    utilizzi = leggi_utilizzi()   # 🔥 legge il numero di utilizzi dell’app
+    utilizzi = leggi_accessi()["totale"]
 
     return render_template("info.html", testo=testo, utilizzi=utilizzi)
 
 @app.route("/accessi")
 def accessi():
-    dati = leggi_accessi_giornalieri()
-    dati_ordinati = dict(sorted(dati.items()))
-    return render_template("accessi.html", dati=dati_ordinati)
+    data = leggi_accessi()
+    giorni = dict(sorted(data["giorni"].items()))
+
+    # 🔥 Converte le date in formato italiano
+    giorni_italiani = {}
+    for data_iso, numero in giorni.items():
+        # da "2026-08-03" a "03/08/2026"
+        dt = datetime.strptime(data_iso, "%Y-%m-%d")
+        giorni_italiani[dt.strftime("%d/%m/%Y")] = numero
+
+    return render_template("accessi.html", dati=giorni_italiani)
 
 # -------------------------------
 # AVVIO SERVER
