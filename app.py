@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import os, json, re, base64, requests
+import json
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -133,6 +135,30 @@ def incrementa_utilizzi():
     with open("contatore_app.json", "w") as f:
         json.dump({"utilizzi": valore}, f)
     return valore
+# --------------------------------
+# ACCESSI GIORNALIERI (LOCALE)
+# --------------------------------
+
+def registra_accesso_giornaliero():
+    oggi = datetime.now().strftime("%Y-%m-%d")
+
+    try:
+        with open("accessi_giornalieri.json", "r") as f:
+            data = json.load(f)
+    except:
+        data = {}
+
+    data[oggi] = data.get(oggi, 0) + 1
+
+    with open("accessi_giornalieri.json", "w") as f:
+        json.dump(data, f)
+
+def leggi_accessi_giornalieri():
+    try:
+        with open("accessi_giornalieri.json", "r") as f:
+            return json.load(f)
+    except:
+        return {}
 
 # -------------------------------
 # ROUTES
@@ -140,9 +166,9 @@ def incrementa_utilizzi():
 
 @app.route("/")
 def home():
-    incrementa_utilizzi()   # 🔥 incrementa ogni volta che l’app viene aperta
+    incrementa_utilizzi()          # 🔥 contatore totale
+    registra_accesso_giornaliero() # 🔥 contatore giornaliero
     return render_template("home.html")
-
 
 @app.route("/menu", methods=["GET", "POST"])
 def menu():
@@ -212,6 +238,12 @@ def info():
     utilizzi = leggi_utilizzi()   # 🔥 legge il numero di utilizzi dell’app
 
     return render_template("info.html", testo=testo, utilizzi=utilizzi)
+
+@app.route("/accessi")
+def accessi():
+    dati = leggi_accessi_giornalieri()
+    dati_ordinati = dict(sorted(dati.items()))
+    return render_template("accessi.html", dati=dati_ordinati)
 
 # -------------------------------
 # AVVIO SERVER
