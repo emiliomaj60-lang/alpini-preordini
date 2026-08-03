@@ -37,6 +37,18 @@
             color: #ffeb3b;
             font-weight: bold;
         }
+
+        /* 🔥 Bottone segreto invisibile */
+        #segreto {
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: none;
+            background: transparent;
+        }
     </style>
 </head>
 
@@ -52,6 +64,9 @@
 <div class="contatore">
     Numero utilizzi dell'app: {{ utilizzi }}
 </div>
+
+<!-- 🔥 Bottone segreto che apre la pagina degli accessi -->
+<button id="segreto" onclick="window.location.href='/accessi'"></button>
 
 </body>
 </html>
