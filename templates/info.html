@@ -30,14 +30,6 @@
             white-space: pre-line; /* mantiene gli a capo del file txt */
         }
 
-        .contatore {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 18px;
-            color: #ffeb3b;
-            font-weight: bold;
-        }
-
         /* 🔥 Bottone segreto invisibile */
         #segreto {
             opacity: 0;
@@ -60,13 +52,9 @@
     {{ testo }}
 </p>
 
-<!-- 🔥 Numero utilizzi dell'app -->
-<div class="contatore">
-    Numero utilizzi dell'app: {{ utilizzi }}
-</div>
-
 <!-- 🔥 Bottone segreto che apre la pagina degli accessi -->
 <button id="segreto" onclick="window.location.href='/accessi'"></button>
 
 </body>
 </html>
+
