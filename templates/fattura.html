@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* MENU LATERALE */
         #sidebar {
             height: 100%;
             width: 0;
@@ -56,7 +55,6 @@
             top: 10px;
         }
 
-        /* HEADER */
         .header {
             background: #2e6b2f;
             padding: 10px;
@@ -78,7 +76,6 @@
             font-weight: bold;
         }
 
-        /* CONTENITORE BIANCO CENTRATO */
         .contenitore {
             background: white;
             color: black;
@@ -141,11 +138,24 @@
             color: #2e6b2f;
         }
 
-        /* 🔥 NASCONDI ELEMENTI SOLO NEL PDF/STAMPA */
         @media print {
             .header img { display: none !important; }
             .header h1 { display: none !important; }
             .menu-icon { display: none !important; }
+        }
+
+        /* 🔙 Pulsante torna al menu */
+        .torna-menu {
+            display: block;
+            margin: 25px auto 0 auto;
+            background: #2e6b2f;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            width: 80%;
         }
     </style>
 
@@ -161,7 +171,6 @@
 
 <body>
 
-<!-- MENU LATERALE -->
 <div id="sidebar">
     <a href="javascript:void(0)" onclick="closeMenu()">✖ Chiudi</a>
     <a href="/">🏠 Home</a>
@@ -170,14 +179,12 @@
     <a href="/contatti">📞 Contatti</a>
 </div>
 
-<!-- HEADER -->
 <div class="header">
     <span class="menu-icon" onclick="openMenu()">☰</span>
     <img src="https://raw.githubusercontent.com/emiliomaj60-lang/emiliodati/main/LOGO%20ALPINI.jpg">
     <h1>RIEPILOGO ORDINE</h1>
 </div>
 
-<!-- CONTENUTO -->
 <div class="contenitore">
 
     <div class="titolo">RIEPILOGO ORDINE</div>
@@ -207,6 +214,12 @@
     <div class="totale">
         Totale ordine: {{ "%.2f"|format(totale) }} €
     </div>
+
+    <!-- 🔥 Pulsante che torna al menu mantenendo i dati -->
+    <a class="torna-menu"
+       href="/menu?cliente={{ cliente }}&tavolo={{ tavolo }}&coperti={{ coperti }}">
+       🔙 Torna al menu
+    </a>
 
 </div>
 
