@@ -309,10 +309,24 @@
             return true;
         }
 
-        // 🔥 Non resettare nulla quando si torna indietro
-        window.onload = function() {};
+        // 🔥 OPZIONE C — Reset solo se NON arrivo dalla fattura
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const from = urlParams.get("from");
 
+            // Se arrivo dalla fattura → NON resetto nulla
+            if (from === "fattura") {
+                return;
+            }
+
+            // Se torno indietro da altre pagine → resetto
+            if (performance.navigation.type === 2) {
+                document.querySelector("form").reset();
+                document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
+            }
+        };
     </script>
+
 </head>
 
 <body>
