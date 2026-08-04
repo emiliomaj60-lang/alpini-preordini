@@ -309,13 +309,9 @@
             return true;
         }
 
-        // 🔥 Reset automatico del form quando si torna indietro
-        window.onload = function() {
-            if (performance.navigation.type === 2) {
-                document.querySelector("form").reset();
-                document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
-            }
-        };
+        // 🔥 Non resettare nulla quando si torna indietro
+        window.onload = function() {};
+
     </script>
 </head>
 
