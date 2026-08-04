@@ -4,7 +4,6 @@
     <title>Riepilogo Ordine</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Icona unica -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
     <meta name="theme-color" content="#1f4d1f">
@@ -138,13 +137,6 @@
             color: #2e6b2f;
         }
 
-        @media print {
-            .header img { display: none !important; }
-            .header h1 { display: none !important; }
-            .menu-icon { display: none !important; }
-        }
-
-        /* 🔙 Pulsante torna al menu */
         .torna-menu {
             display: block;
             margin: 25px auto 0 auto;
@@ -157,6 +149,20 @@
             font-size: 18px;
             width: 80%;
         }
+
+        .salva-btn {
+            display: block;
+            margin: 15px auto 0 auto;
+            background: #004d00;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            width: 80%;
+            border: none;
+        }
     </style>
 
     <script>
@@ -165,6 +171,35 @@
         }
         function closeMenu() {
             document.getElementById("sidebar").style.width = "0";
+        }
+
+        /* 🔥 Funzione per salvare la fattura sul telefonino */
+        function salvaFattura() {
+
+            let testo = "";
+            testo += "FATTURA - FESTA ALPINI SCHILPARIO\n";
+            testo += "--------------------------------------\n\n";
+            testo += "Cliente: {{ cliente }}\n";
+            testo += "Tavolo: {{ tavolo }}\n";
+            testo += "Coperti: {{ coperti }}\n\n";
+            testo += "ORDINE:\n";
+
+            {% for r in ordine %}
+            testo += "- {{ r.nome }} x{{ r.qta }} = {{ "%.2f"|format(r.qta * r.prezzo) }}€\n";
+            {% endfor %}
+
+            testo += "\nTotale: {{ "%.2f"|format(totale) }} €\n";
+            testo += "\nGrazie e buona festa! 🍻";
+
+            let blob = new Blob([testo], { type: "text/plain" });
+            let url = URL.createObjectURL(blob);
+
+            let a = document.createElement("a");
+            a.href = url;
+            a.download = "fattura_{{ cliente }}.txt";
+            a.click();
+
+            URL.revokeObjectURL(url);
         }
     </script>
 </head>
@@ -215,11 +250,16 @@
         Totale ordine: {{ "%.2f"|format(totale) }} €
     </div>
 
+    <!-- 🔙 Torna al menu -->
     <a class="torna-menu"
-    href="/menu?from=fattura&cliente={{ cliente }}&tavolo={{ tavolo }}&coperti={{ coperti }}">
-    🔙 Torna al menu
+       href="/menu?from=fattura&cliente={{ cliente }}&tavolo={{ tavolo }}&coperti={{ coperti }}">
+       🔙 Torna al menu
     </a>
 
+    <!-- 📄 Salva fattura -->
+    <button class="salva-btn" onclick="salvaFattura()">
+        📄 Salva Fattura sul Telefonino
+    </button>
 
 </div>
 
