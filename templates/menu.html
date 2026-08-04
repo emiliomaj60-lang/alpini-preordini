@@ -309,20 +309,29 @@
             return true;
         }
 
-        // 🔥 OPZIONE C — Reset SOLO se NON arrivo dalla fattura
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const from = urlParams.get("from");
-
-            // Se arrivo dalla fattura → NON resetto nulla
-            if (from === "fattura") {
-                return;
+        /* 🔥 SALVATAGGIO AUTOMATICO dei campi principali */
+        document.addEventListener("input", function(e) {
+            if (e.target.name === "cliente") {
+                localStorage.setItem("cliente", e.target.value);
             }
+            if (e.target.name === "tavolo") {
+                localStorage.setItem("tavolo", e.target.value);
+            }
+            if (e.target.name === "coperti") {
+                localStorage.setItem("coperti", e.target.value);
+            }
+        });
 
-            // Se apro il menu normalmente → resetto
-            document.querySelector("form").reset();
-            document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
-        };
+        /* 🔥 RIPRISTINO AUTOMATICO quando si apre la pagina */
+        window.addEventListener("DOMContentLoaded", function() {
+            const cliente = localStorage.getItem("cliente");
+            const tavolo = localStorage.getItem("tavolo");
+            const coperti = localStorage.getItem("coperti");
+
+            if (cliente) document.getElementsByName("cliente")[0].value = cliente;
+            if (tavolo) document.getElementsByName("tavolo")[0].value = tavolo;
+            if (coperti) document.getElementsByName("coperti")[0].value = coperti;
+        });
     </script>
 
 </head>
