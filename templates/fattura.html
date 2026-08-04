@@ -156,8 +156,9 @@
         }
     </style>
 
-    <!-- 📄 Libreria html2pdf.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Librerie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
         function openMenu() {
@@ -167,31 +168,32 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        /* 📄 SALVA FATTURA GRAFICA COME PDF (UNA SOLA PAGINA LUNGA) */
-        function salvaPDF() {
+        /* 📄 SALVA FATTURA GRAFICA COME PDF — SENZA TAGLI */
+        async function salvaPDF() {
+            const { jsPDF } = window.jspdf;
+
             const elemento = document.querySelector(".contenitore");
 
-            const opzioni = {
-                margin: 10,
-                filename: "fattura_{{ cliente }}.pdf",
-                image: { type: "jpeg", quality: 1 },
-                html2canvas: { 
-                    scale: 2,
-                    scrollY: -window.scrollY
-                },
-                pagebreak: { 
-                    mode: ['avoid-all', 'css', 'legacy']
-                },
-                jsPDF: { 
-                    unit: "mm",
-                    format: [210, 2000],   /* 🔥 UNA SOLA PAGINA MOLTO LUNGA */
-                    orientation: "portrait"
-                }
-            };
-
-            html2pdf().set(opzioni).from(elemento).save().then(() => {
-                alert("📄 Fattura salvata sul telefonino!");
+            // 🔥 Cattura immagine completa, senza limiti
+            const canvas = await html2canvas(elemento, {
+                scale: 2,
+                useCORS: true,
+                scrollY: -window.scrollY
             });
+
+            const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+            // 🔥 Calcolo dimensioni PDF in base all'immagine
+            const imgWidth = 210; // larghezza A4 in mm
+            const pageHeight = (canvas.height * imgWidth) / canvas.width;
+
+            const pdf = new jsPDF("p", "mm", [imgWidth, pageHeight]);
+
+            pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, pageHeight);
+
+            pdf.save("fattura_{{ cliente }}.pdf");
+
+            alert("📄 Fattura salvata sul telefonino!");
         }
     </script>
 </head>
@@ -247,7 +249,6 @@
        🔙 Torna al menu
     </a>
 
-    <!-- 📄 Pulsante PDF grafico -->
     <button class="salva-btn" onclick="salvaPDF()">
         📄 Salva Lista
     </button>
