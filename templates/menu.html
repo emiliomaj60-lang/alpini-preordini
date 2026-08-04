@@ -309,21 +309,22 @@
             return true;
         }
 
-        /* 🔥 SALVATAGGIO AUTOMATICO dei campi principali */
+        /* 🔥 SALVA Cliente / Tavolo / Coperti */
         document.addEventListener("input", function(e) {
-            if (e.target.name === "cliente") {
-                localStorage.setItem("cliente", e.target.value);
-            }
-            if (e.target.name === "tavolo") {
-                localStorage.setItem("tavolo", e.target.value);
-            }
-            if (e.target.name === "coperti") {
-                localStorage.setItem("coperti", e.target.value);
+            if (e.target.name === "cliente") localStorage.setItem("cliente", e.target.value);
+            if (e.target.name === "tavolo") localStorage.setItem("tavolo", e.target.value);
+            if (e.target.name === "coperti") localStorage.setItem("coperti", e.target.value);
+
+            /* 🔥 SALVA anche le quantità dei piatti */
+            if (e.target.classList.contains("qta")) {
+                localStorage.setItem(e.target.name, e.target.value);
             }
         });
 
-        /* 🔥 RIPRISTINO AUTOMATICO quando si apre la pagina */
+        /* 🔥 RIPRISTINA TUTTO quando si apre la pagina */
         window.addEventListener("DOMContentLoaded", function() {
+
+            // Cliente / Tavolo / Coperti
             const cliente = localStorage.getItem("cliente");
             const tavolo = localStorage.getItem("tavolo");
             const coperti = localStorage.getItem("coperti");
@@ -331,6 +332,14 @@
             if (cliente) document.getElementsByName("cliente")[0].value = cliente;
             if (tavolo) document.getElementsByName("tavolo")[0].value = tavolo;
             if (coperti) document.getElementsByName("coperti")[0].value = coperti;
+
+            // Quantità dei piatti
+            document.querySelectorAll(".qta").forEach(campo => {
+                const salvato = localStorage.getItem(campo.name);
+                if (salvato) campo.value = salvato;
+            });
+
+            aggiornaTotale();
         });
     </script>
 
