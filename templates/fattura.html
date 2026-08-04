@@ -167,7 +167,7 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        /* 📄 SALVA FATTURA GRAFICA COME PDF */
+        /* 📄 SALVA FATTURA GRAFICA COME PDF (UNA SOLA PAGINA LUNGA) */
         function salvaPDF() {
             const elemento = document.querySelector(".contenitore");
 
@@ -175,8 +175,18 @@
                 margin: 10,
                 filename: "fattura_{{ cliente }}.pdf",
                 image: { type: "jpeg", quality: 1 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+                html2canvas: { 
+                    scale: 2,
+                    scrollY: -window.scrollY
+                },
+                pagebreak: { 
+                    mode: ['avoid-all', 'css', 'legacy']
+                },
+                jsPDF: { 
+                    unit: "mm",
+                    format: [210, 2000],   /* 🔥 UNA SOLA PAGINA MOLTO LUNGA */
+                    orientation: "portrait"
+                }
             };
 
             html2pdf().set(opzioni).from(elemento).save().then(() => {
@@ -239,7 +249,7 @@
 
     <!-- 📄 Pulsante PDF grafico -->
     <button class="salva-btn" onclick="salvaPDF()">
-        📄 Salva Fattura Grafica (PDF)
+        📄 Salva Lista
     </button>
 
 </div>
