@@ -173,7 +173,7 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        /* 🔥 Funzione per salvare la fattura sul telefonino */
+        /* 📄 CREA FILE LEGGIBILE SU QUALSIASI TELEFONO */
         function salvaFattura() {
 
             let testo = "";
@@ -250,15 +250,13 @@
         Totale ordine: {{ "%.2f"|format(totale) }} €
     </div>
 
-    <!-- 🔙 Torna al menu -->
     <a class="torna-menu"
        href="/menu?from=fattura&cliente={{ cliente }}&tavolo={{ tavolo }}&coperti={{ coperti }}">
        🔙 Torna al menu
     </a>
 
-    <!-- 📄 Salva fattura -->
     <button class="salva-btn" onclick="salvaFattura()">
-        📄 Salva Fattura sul Telefonino
+        📄 Salva Lista sul Telefonino
     </button>
 
 </div>
