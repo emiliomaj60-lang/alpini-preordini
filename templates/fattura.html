@@ -85,15 +85,6 @@
             border-radius: 26px;
             box-shadow: 0 0 14px rgba(0,0,0,0.5);
             border: 3px solid #1f4d1f;
-
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.5s ease-out forwards;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
         }
 
         .titolo {
@@ -165,6 +156,9 @@
         }
     </style>
 
+    <!-- 📄 Libreria html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script>
         function openMenu() {
             document.getElementById("sidebar").style.width = "250px";
@@ -173,33 +167,21 @@
             document.getElementById("sidebar").style.width = "0";
         }
 
-        /* 📄 CREA FILE LEGGIBILE SU QUALSIASI TELEFONO */
-        function salvaFattura() {
+        /* 📄 SALVA FATTURA GRAFICA COME PDF */
+        function salvaPDF() {
+            const elemento = document.querySelector(".contenitore");
 
-            let testo = "";
-            testo += "FATTURA - FESTA ALPINI SCHILPARIO\n";
-            testo += "--------------------------------------\n\n";
-            testo += "Cliente: {{ cliente }}\n";
-            testo += "Tavolo: {{ tavolo }}\n";
-            testo += "Coperti: {{ coperti }}\n\n";
-            testo += "ORDINE:\n";
+            const opzioni = {
+                margin: 10,
+                filename: "fattura_{{ cliente }}.pdf",
+                image: { type: "jpeg", quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+            };
 
-            {% for r in ordine %}
-            testo += "- {{ r.nome }} x{{ r.qta }} = {{ "%.2f"|format(r.qta * r.prezzo) }}€\n";
-            {% endfor %}
-
-            testo += "\nTotale: {{ "%.2f"|format(totale) }} €\n";
-            testo += "\nGrazie e buona festa! 🍻";
-
-            let blob = new Blob([testo], { type: "text/plain" });
-            let url = URL.createObjectURL(blob);
-
-            let a = document.createElement("a");
-            a.href = url;
-            a.download = "fattura_{{ cliente }}.txt";
-            a.click();
-
-            URL.revokeObjectURL(url);
+            html2pdf().set(opzioni).from(elemento).save().then(() => {
+                alert("📄 Fattura salvata sul telefonino!");
+            });
         }
     </script>
 </head>
@@ -220,7 +202,7 @@
     <h1>RIEPILOGO ORDINE</h1>
 </div>
 
-<div class="contenitore">
+<div class="contenitore" id="fattura">
 
     <div class="titolo">RIEPILOGO ORDINE</div>
 
@@ -255,8 +237,9 @@
        🔙 Torna al menu
     </a>
 
-    <button class="salva-btn" onclick="salvaFattura()">
-        📄 Salva Lista sul Telefonino
+    <!-- 📄 Pulsante PDF grafico -->
+    <button class="salva-btn" onclick="salvaPDF()">
+        📄 Salva Fattura Grafica (PDF)
     </button>
 
 </div>
