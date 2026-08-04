@@ -309,7 +309,7 @@
             return true;
         }
 
-        // 🔥 OPZIONE C — Reset solo se NON arrivo dalla fattura
+        // 🔥 OPZIONE C — Reset SOLO se NON arrivo dalla fattura
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const from = urlParams.get("from");
@@ -319,11 +319,9 @@
                 return;
             }
 
-            // Se torno indietro da altre pagine → resetto
-            if (performance.navigation.type === 2) {
-                document.querySelector("form").reset();
-                document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
-            }
+            // Se apro il menu normalmente → resetto
+            document.querySelector("form").reset();
+            document.getElementById("totale-alto").innerHTML = "Tot: 0.00 €";
         };
     </script>
 
