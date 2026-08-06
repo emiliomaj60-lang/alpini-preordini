@@ -238,6 +238,21 @@ def accessi():
 
     return render_template("accessi.html", dati=giorni_italiani)
 
+ADMIN_PASSWORD = "annaemil"
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        pwd = request.form.get("password")
+        if pwd == ADMIN_PASSWORD:
+            session["admin"] = True
+            return redirect("/admin/home")
+        else:
+            return render_template("admin.html", errore=True)
+
+    return render_template("admin.html")
+
+
 # -------------------------------
 # AVVIO SERVER
 # -------------------------------
