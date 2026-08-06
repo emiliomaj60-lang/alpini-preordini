@@ -40,6 +40,7 @@
             overflow-x: hidden;
             transition: 0.3s;
             padding-top: 50px;
+            position: relative; /* 🔥 NECESSARIO PER MOSTRARE IL LINK IN BASSO */
         }
 
         #sidebar a {
@@ -204,7 +205,19 @@
         <a href="/istruzioni">📘 Istruzioni</a>
         <a href="/info">ℹ️ Info Festa</a>
         <a href="/contatti">📞 Contatti</a>
+
+        <!-- 🔐 Link amministratore nascosto -->
+        <a href="/admin" style="
+            font-size: 12px;
+            opacity: 0.35;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        ">
+            🔐 Amministratore
+        </a>
     </div>
+
 
     <!-- HEADER -->
     <div class="header">
