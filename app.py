@@ -251,7 +251,7 @@ def admin_accessi():
     if not session.get("admin"):
         return redirect("/admin")
 
-    accessi = carica_accessi()  # tua funzione già esistente
+    accessi = leggi_accessi()  # usa la funzione che hai già
     return render_template("admin_accessi.html", accessi=accessi)
 
 @app.route("/admin/menu", methods=["GET", "POST"])
@@ -259,24 +259,15 @@ def admin_menu():
     if not session.get("admin"):
         return redirect("/admin")
 
-    menu = carica_menu()  # lista pietanze
+    menu = get_menu()  # usa la funzione che hai già
 
-    if request.method == "POST":
-        esauriti = request.form.getlist("esauriti")
-        for p in menu:
-            p["esaurita"] = p["nome"] in esauriti
-        salva_menu(menu)
-
+    # per ora non salviamo nulla su file, solo prepariamo la pagina
     return render_template("admin_menu.html", menu=menu)
 
 @app.route("/admin/logout")
 def admin_logout():
     session.clear()
     return redirect("/")
-
-@app.route("/admin/test")
-def admin_test():
-    return render_template("admin_home.html")
 
 # -------------------------------
 # AVVIO SERVER
