@@ -137,12 +137,15 @@ def salva_accessi(data):
 def registra_accesso():
     data = leggi_accessi()
 
-    # totale
-    data["totale"] += 1
-
-    # giornaliero
     oggi = datetime.now().strftime("%d/%m/%Y")
-    data["giorni"][oggi] = data["giorni"].get(oggi, 0) + 1
+
+    # se è la prima volta oggi, crea il giorno
+    if oggi not in data["giorni"]:
+        data["giorni"][oggi] = 0
+
+    # incrementa
+    data["giorni"][oggi] += 1
+    data["totale"] += 1
 
     salva_accessi(data)
 
