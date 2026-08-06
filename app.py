@@ -224,19 +224,6 @@ def info():
 
     return render_template("info.html", testo=testo, utilizzi=utilizzi)
 
-@app.route("/accessi")
-def accessi():
-    data = leggi_accessi()
-    giorni = dict(sorted(data["giorni"].items()))
-
-    # 🔥 Converte le date in formato italiano
-    giorni_italiani = {}
-    for data_iso, numero in giorni.items():
-        # da "2026-08-03" a "03/08/2026"
-        dt = datetime.strptime(data_iso, "%Y-%m-%d")
-        giorni_italiani[dt.strftime("%d/%m/%Y")] = numero
-
-    return render_template("accessi.html", dati=giorni_italiani)
 
 ADMIN_PASSWORD = "annaemil"
 
@@ -251,6 +238,40 @@ def admin_login():
             return render_template("admin.html", errore=True)
 
     return render_template("admin.html")
+
+@app.route("/admin/home")
+def admin_home():
+    if not session.get("admin"):
+        return redirect("/admin")
+    return render_template("admin_home.html")
+
+@app.route("/admin/accessi")
+def admin_accessi():
+    if not session.get("admin"):
+        return redirect("/admin")
+
+    accessi = carica_accessi()  # tua funzione già esistente
+    return render_template("admin_accessi.html", accessi=accessi)
+
+@app.route("/admin/menu", methods=["GET", "POST"])
+def admin_menu():
+    if not session.get("admin"):
+        return redirect("/admin")
+
+    menu = carica_menu()  # lista pietanze
+
+    if request.method == "POST":
+        esauriti = request.form.getlist("esauriti")
+        for p in menu:
+            p["esaurita"] = p["nome"] in esauriti
+        salva_menu(menu)
+
+    return render_template("admin_menu.html", menu=menu)
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.clear()
+    return redirect("/")
 
 
 # -------------------------------
