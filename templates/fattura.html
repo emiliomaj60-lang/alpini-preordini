@@ -234,15 +234,16 @@
         <tr>
             <td>{{ r.nome }}</td>
             <td>{{ r.qta }}</td>
-            <td>{{ "%.2f"|format(r.prezzo) }}€</td>
-            <td>{{ "%.2f"|format(r.qta * r.prezzo) }}€</td>
+            <td>{{ "%.1f"|format(r.prezzo) }}€</td>
+            <td>{{ "%.1f"|format(r.qta * r.prezzo) }}€</td>
         </tr>
         {% endfor %}
     </table>
 
     <div class="totale">
-        Totale ordine: {{ "%.2f"|format(totale) }} €
+        Totale ordine: {{ "%.1f"|format(totale) }} €
     </div>
+
 
     <a class="torna-menu"
        href="/menu?from=fattura&cliente={{ cliente }}&tavolo={{ tavolo }}&coperti={{ coperti }}">
