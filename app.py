@@ -137,7 +137,7 @@ def salva_accessi(data):
 def registra_accesso():
     data = leggi_accessi()
 
-    oggi = datetime.now().strftime("%d/%m/%Y")
+    oggi = datetime.now().strftime("%d/%m/%Y")   # 🇮🇹 formato italiano
 
     # se è la prima volta oggi, crea il giorno
     if oggi not in data["giorni"]:
