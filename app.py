@@ -134,20 +134,22 @@ def salva_accessi(data):
         json.dump(data, f)
 
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 def registra_accesso():
     data = leggi_accessi()
 
-    oggi = datetime.now().strftime("%d/%m/%Y")   # 🇮🇹 formato italiano
+    oggi = datetime.now(ZoneInfo("Europe/Rome")).strftime("%d/%m/%Y")
 
-    # se è la prima volta oggi, crea il giorno
     if oggi not in data["giorni"]:
         data["giorni"][oggi] = 0
 
-    # incrementa
     data["giorni"][oggi] += 1
     data["totale"] += 1
 
     salva_accessi(data)
+
 
 # -------------------------------
 # ROUTES
