@@ -141,11 +141,10 @@ def registra_accesso():
     data["totale"] += 1
 
     # giornaliero
-    oggi = datetime.now().strftime("%Y-%m-%d")
+    oggi = datetime.now().strftime("%d/%m/%Y")
     data["giorni"][oggi] = data["giorni"].get(oggi, 0) + 1
 
     salva_accessi(data)
-
 
 # -------------------------------
 # ROUTES
