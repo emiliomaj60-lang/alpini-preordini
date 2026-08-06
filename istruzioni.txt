@@ -1,9 +1,10 @@
 1. SCEGLI UN TAVOLO E OCCUPALO.
-  (se vuoi usare questa App)
 
+  (se vuoi usare questa App)
 2. scegli "Vai al Menu e Compila"
-3, Inserisci il Tuo Nome (ti verrà chiesto in cassa)
-4. Inserisci il numero del TAVOLO 
+3, Inserisci il Tuo Nome (ti verrà chiesto in
+ cassa)
+4. Inserisci il NUMERO del TAVOLO
 ......(scelto in precedenza).
 4. Inserisci il numero dei COPERTI.
 5. Scegli le pietanze e le quantità.
@@ -18,14 +19,15 @@ modificare/azzerare o cambiare le quantità.
 Se invece si preme "SALVA LISTA".
 verrà creato un file PDF nel vostro telefonino
 con la possibilità di rivedere il listato creato
-anche usiti dall' APP.
+anche usciti dall' APP.
 
-La schermata creata vi servirà alla cassa
-al momento del pagamento con la 
-POSSIBILITA' di EVENTUALI MODIFICHE.
+La schermata creata vi servirà per velocizzare
+le operazioni di cassa.
 
-N.B. SARA' LO SCONTRINO RICEVUTO IN CASSA IL RIFERIMENTO
-PER LA DISTRIBUZIONE.
+N.B. 
+   1- SI ACCETTANO SOLO PAGAMENTI IN CONTANTI.
+   2- SARA' LO SCONTRINO RICEVUTO IN CASSA 
+      IL RIFERIMENTO PER LA DISTRIBUZIONE.
 
     Grazie e Buon Appetito.
 
