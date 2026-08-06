@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, session
 import os, json, re, base64, requests
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "supersegreto123"   # 🔥 NECESSARIO PER USARE session
 
 # -------------------------------
 # CONFIGURAZIONE GITHUB
