@@ -15,11 +15,11 @@
 <h2>📊 Accessi all'app</h2>
 
 <table>
-    <tr><th>Data</th><th>IP</th></tr>
-    {% for a in accessi %}
+    <tr><th>Data</th><th>Accessi</th></tr>
+    {% for giorno, valore in accessi.giorni.items() %}
     <tr>
-        <td>{{ a.data }}</td>
-        <td>{{ a.ip }}</td>
+        <td>{{ giorno }}</td>
+        <td>{{ valore }}</td>
     </tr>
     {% endfor %}
 </table>
