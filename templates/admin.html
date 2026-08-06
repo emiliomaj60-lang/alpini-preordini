@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accesso Amministratore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #1f4d1f;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding-top: 80px;
+        }
+        .box {
+            background: #0f2f0f;
+            padding: 25px;
+            width: 80%;
+            max-width: 350px;
+            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 10px black;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: none;
+            font-size: 18px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #004d00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>🔐 Accesso Amministratore</h2>
+
+    <form method="POST">
+        <input type="password" name="password" placeholder="Password amministratore">
+        <button type="submit">Entra</button>
+    </form>
+
+    {% if errore %}
+        <p style="color: red; margin-top: 15px;">Password errata</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
