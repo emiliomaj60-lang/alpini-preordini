@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestione Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { background: #1f4d1f; color: white; font-family: Arial; padding: 20px; }
+        label { display: block; margin: 10px 0; font-size: 18px; }
+        input[type=checkbox] { transform: scale(1.4); margin-right: 10px; }
+        button { margin-top: 20px; padding: 10px 20px; background: #004d00; color: white; border: none; border-radius: 8px; font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<h2>🍽️ Gestione Menu</h2>
+
+<form method="POST">
+    {% for p in menu %}
+        <label>
+            <input type="checkbox" name="esauriti" value="{{ p.nome }}" {% if p.esaurita %}checked{% endif %}>
+            {{ p.nome }}
+        </label>
+    {% endfor %}
+
+    <button type="submit">Salva</button>
+</form>
+
+</body>
+</html>
