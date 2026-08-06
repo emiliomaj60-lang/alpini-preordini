@@ -273,6 +273,9 @@ def admin_logout():
     session.clear()
     return redirect("/")
 
+@app.route("/admin/test")
+def admin_test():
+    return render_template("admin_home.html")
 
 # -------------------------------
 # AVVIO SERVER
