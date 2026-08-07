@@ -150,6 +150,16 @@ def registra_accesso():
 
     salva_accessi(data)
 
+def leggi_menu():
+    try:
+        with open("menu.json", "r") as f:
+            return json.load(f)
+    except:
+        return {"pietanze": []}
+
+def salva_menu(menu):
+    with open("menu.json", "w") as f:
+        json.dump(menu, f, indent=4)
 
 # -------------------------------
 # ROUTES
@@ -260,12 +270,16 @@ def admin_accessi():
 
 @app.route("/admin/menu", methods=["GET", "POST"])
 def admin_menu():
-    if not session.get("admin"):
-        return redirect("/admin")
+    menu = leggi_menu()
 
-    menu = get_menu()  # usa la funzione che hai già
+    if request.method == "POST":
+        # aggiorna lo stato delle pietanze
+        for i, p in enumerate(menu["pietanze"]):
+            chiave = f"esaurita_{i}"
+            p["esaurita"] = (chiave in request.form)
 
-    # per ora non salviamo nulla su file, solo prepariamo la pagina
+        salva_menu(menu)
+
     return render_template("admin_menu.html", menu=menu)
 
 @app.route("/admin/logout")
