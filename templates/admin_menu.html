@@ -5,21 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { background: #1f4d1f; color: white; font-family: Arial; padding: 20px; }
-        label { display: block; margin: 10px 0; font-size: 20px; }
-        input[type=checkbox] { transform: scale(1.5); margin-right: 10px; }
-        button { padding: 10px 20px; background: #004d00; color: white; border: none; font-size: 18px; }
+        label { 
+            display: block; 
+            margin: 6px 0; 
+            font-size: 16px;   /* 🔥 RIMPICCIOLITO */
+        }
+        input[type=checkbox] { 
+            transform: scale(1.3);   /* 🔥 leggermente più piccolo */
+            margin-right: 10px; 
+        }
+        button { 
+            padding: 10px 20px; 
+            background: #004d00; 
+            color: white; 
+            border: none; 
+            font-size: 18px; 
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-<h2>🍽️ Gestione Menu</h2>
+<h2 style="font-size:22px;">🍽️ Gestione Menu</h2>
 
 <form method="POST">
 
     {% for p in menu %}
         <label>
             <input type="checkbox" name="esaurita_{{ loop.index0 }}" {% if p.esaurita %}checked{% endif %}>
-            {{ p.nome }} — {{ p.prezzo }}€
+            {{ p.nome }}
             {% if p.esaurita %}
                 <span style="color:red; font-weight:bold;">(ESURITA)</span>
             {% endif %}
