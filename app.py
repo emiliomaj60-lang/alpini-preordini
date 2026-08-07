@@ -282,6 +282,23 @@ def admin_menu():
 
     return render_template("admin_menu.html", menu=menu)
 
+@app.route("/ordina", methods=["POST"])
+def ordina():
+    menu = leggi_menu()
+    dati = request.form
+
+    # controllo sicurezza
+    for item in menu:
+        nome = item["nome"]
+        esaurita = item["esaurita"]
+
+        qta = int(dati.get(nome, 0)) if dati.get(nome) else 0
+
+        if esaurita and qta > 0:
+            return "❌ Questa pietanza è esaurita. Non puoi ordinarla."
+
+    # ... procedi con l'ordine ...
+
 @app.route("/admin/logout")
 def admin_logout():
     session.clear()
