@@ -33,10 +33,12 @@
     {% for p in menu %}
         <label>
             <input type="checkbox" name="esaurita_{{ loop.index0 }}" {% if p.esaurita %}checked{% endif %}>
-            {{ p.nome }}
-            {% if p.esaurita %}
-                <span style="color:red; font-weight:bold;">(ESURITA)</span>
-            {% endif %}
+            
+            <!-- 🔥 Se esaurita → diventa rossa -->
+            <span style="{% if p.esaurita %}color:red; font-weight:bold;{% endif %}">
+                {{ p.nome }}
+            </span>
+
         </label>
     {% endfor %}
 
