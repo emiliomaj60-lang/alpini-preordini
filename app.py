@@ -93,11 +93,10 @@ def get_menu():
             lines = f.read().splitlines()
             for line in lines[1:]:
                 nome, prezzo = line.split(",")
-                menu.append({"nome": nome, "prezzo": float(prezzo)})
+                menu.append({"nome": nome, "prezzo": float(prezzo), "esaurita": False})
     except FileNotFoundError:
         menu = []
     return menu
-
 
 def sanitize_filename(name):
     return re.sub(r"[^A-Za-z0-9]", "", name)
@@ -155,7 +154,10 @@ def leggi_menu():
         with open("menu.json", "r") as f:
             return json.load(f)
     except:
-        return {"pietanze": []}
+        # Se menu.json non esiste → crealo dal CSV
+        menu = {"pietanze": get_menu()}
+        salva_menu(menu)
+        return menu
 
 def salva_menu(menu):
     with open("menu.json", "w") as f:
@@ -270,7 +272,7 @@ def admin_accessi():
 
 @app.route("/admin/menu", methods=["GET", "POST"])
 def admin_menu():
-    menu = leggi_menu()  # menu.json → {"pietanze": [...]}
+    menu = leggi_menu()  # {"pietanze": [...]}
 
     if request.method == "POST":
         for i, p in enumerate(menu["pietanze"]):
@@ -279,7 +281,6 @@ def admin_menu():
 
         salva_menu(menu)
 
-    # 🔥 PASSO SOLO LA LISTA DELLE PIETANZE
     return render_template("admin_menu.html", menu=menu["pietanze"])
 
 @app.route("/ordina", methods=["POST"])
