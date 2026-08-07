@@ -1,7 +1,0 @@
-{
-  "pietanze": [
-    { "nome": "Pizza Margherita", "esaurita": false },
-    { "nome": "Lasagne", "esaurita": true },
-    { "nome": "Cotoletta", "esaurita": false }
-  ]
-}
