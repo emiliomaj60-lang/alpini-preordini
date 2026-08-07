@@ -169,9 +169,11 @@ def salva_menu(menu):
 
 @app.route("/")
 def home():
-    registra_accesso()
-    return render_template("home.html")
+    # Se arrivo dall'admin NON registro l'accesso
+    if request.args.get("admin") != "1":
+        registra_accesso()
 
+    return render_template("home.html")
 
 @app.route("/menu", methods=["GET", "POST"])
 def menu():
