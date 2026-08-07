@@ -414,16 +414,37 @@
 
         {% for item in menu %}
             <div class="riga">
-                <div class="nome-pietanza">{{ item['nome'] }} ({{ item['prezzo'] }}€)</div>
-                <input
-                    type="text"
-                    class="qta qta-box"
-                    name="{{ item['nome'] }}"
-                    inputmode="numeric"
-                    pattern="[0-9]*"
-                    maxlength="1"
-                    oninput="limitaQta(event); aggiornaTotale()"
-                >
+
+                <div class="nome-pietanza">
+                    {{ item['nome'] }} ({{ item['prezzo'] }}€)
+                    {% if item['esaurita'] %}
+                        <span style="color:red; font-weight:bold;"> — ESAURITA</span>
+                    {% endif %}
+                </div>
+
+                {% if item['esaurita'] %}
+                    <!-- 🔴 PIETANZA ESAURITA: input disattivato -->
+                    <input
+                        type="text"
+                        class="qta qta-box"
+                        name="{{ item['nome'] }}"
+                        disabled
+                        placeholder="X"
+                        style="background:#600; color:white; opacity:0.6;"
+                    >
+                {% else %}
+                    <!-- 🟢 PIETANZA DISPONIBILE -->
+                    <input
+                        type="text"
+                        class="qta qta-box"
+                        name="{{ item['nome'] }}"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        maxlength="1"
+                        oninput="limitaQta(event); aggiornaTotale()"
+                    >
+                {% endif %}
+
             </div>
         {% endfor %}
 
