@@ -175,7 +175,8 @@ def home():
 
 @app.route("/menu", methods=["GET", "POST"])
 def menu():
-    menu_items = get_menu()
+    # 🔥 Usa menu.json, NON il CSV
+    menu_items = leggi_menu()["pietanze"]
 
     if request.method == "POST":
         cliente = request.form["cliente"]
@@ -186,15 +187,25 @@ def menu():
         totale = 0
 
         for item in menu_items:
-            qta = request.form.get(item["nome"], "0")
+            nome = item["nome"]
+            prezzo = item["prezzo"]
+            esaurita = item["esaurita"]
+
+            qta = request.form.get(nome, "0")
+
+            # 🔴 BLOCCO SICUREZZA: impedisce ordini di piatti esauriti
+            if esaurita and qta.strip() != "" and int(qta) > 0:
+                return "❌ Questa pietanza è esaurita. Non puoi ordinarla."
+
+            # 🟢 Se non è esaurita, aggiungi all’ordine
             if qta.strip() != "" and int(qta) > 0:
                 qta = int(qta)
                 ordine.append({
-                    "nome": item["nome"],
+                    "nome": nome,
                     "qta": qta,
-                    "prezzo": item["prezzo"]
+                    "prezzo": prezzo
                 })
-                totale += qta * item["prezzo"]
+                totale += qta * prezzo
 
         numero = None
 
@@ -207,7 +218,6 @@ def menu():
                                totale=totale)
 
     return render_template("menu.html", menu=menu_items)
-
 
 @app.route("/contatti")
 def contatti():
