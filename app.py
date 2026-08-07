@@ -270,17 +270,17 @@ def admin_accessi():
 
 @app.route("/admin/menu", methods=["GET", "POST"])
 def admin_menu():
-    menu = leggi_menu()
+    menu = leggi_menu()  # menu.json → {"pietanze": [...]}
 
     if request.method == "POST":
-        # aggiorna lo stato delle pietanze
         for i, p in enumerate(menu["pietanze"]):
             chiave = f"esaurita_{i}"
             p["esaurita"] = (chiave in request.form)
 
         salva_menu(menu)
 
-    return render_template("admin_menu.html", menu=menu)
+    # 🔥 PASSO SOLO LA LISTA DELLE PIETANZE
+    return render_template("admin_menu.html", menu=menu["pietanze"])
 
 @app.route("/ordina", methods=["POST"])
 def ordina():
