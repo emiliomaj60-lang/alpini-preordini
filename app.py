@@ -252,7 +252,7 @@ def info():
     return render_template("info.html", testo=testo, utilizzi=utilizzi)
 
 
-ADMIN_PASSWORD = "a"
+ADMIN_PASSWORD = "abz"
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin_login():
