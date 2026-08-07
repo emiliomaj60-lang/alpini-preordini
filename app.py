@@ -284,20 +284,16 @@ def admin_menu():
 
 @app.route("/ordina", methods=["POST"])
 def ordina():
-    menu = leggi_menu()
+    menu = leggi_menu()["pietanze"]
     dati = request.form
 
-    # controllo sicurezza
     for item in menu:
-        nome = item["nome"]
-        esaurita = item["esaurita"]
+        if item["esaurita"]:
+            qta = int(dati.get(item["nome"], 0)) if dati.get(item["nome"]) else 0
+            if qta > 0:
+                return "❌ Questa pietanza è esaurita. Non puoi ordinarla."
 
-        qta = int(dati.get(nome, 0)) if dati.get(nome) else 0
-
-        if esaurita and qta > 0:
-            return "❌ Questa pietanza è esaurita. Non puoi ordinarla."
-
-    # ... procedi con l'ordine ...
+    # continua con l'ordine...
 
 @app.route("/admin/logout")
 def admin_logout():
