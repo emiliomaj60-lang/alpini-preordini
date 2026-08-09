@@ -1,14 +1,15 @@
-1. SCEGLI UN TAVOLO E OCCUPALO.
+1. SCEGLI UN TAVOLO E OCCUPALO
+   (prima di passare alla cassa)
 
   (se vuoi usare questa App)
 2. scegli "Vai al Menu e Compila"
-3, Inserisci il Tuo Nome (ti verrà chiesto in
- cassa)
+3. Inserisci il Tuo Nome (ti verrà chiesto in
+   cassa)
 4. Inserisci il NUMERO del TAVOLO
-......(scelto in precedenza).
-4. Inserisci il numero dei COPERTI.
-5. Scegli le pietanze e le quantità.
-6. Premi "Crea lista per Ordine".
+   (scelto e occupato in precedenza).
+5. Inserisci il numero dei COPERTI.
+6. Scegli le pietanze e le quantità.
+7. Premi "Crea la lista del tuo Ordine".
 
 Si passerà a una schermata "RIEPILOGO ORDINE" dove:
 comparirà il riassunto dei piatti scelti con il
@@ -26,8 +27,11 @@ le operazioni di cassa.
 
 N.B. 
    1- SI ACCETTANO SOLO PAGAMENTI IN CONTANTI.
-   2- SARA' LO SCONTRINO RICEVUTO IN CASSA 
-      IL RIFERIMENTO PER LA DISTRIBUZIONE.
+
+   2- GLI SCONTRINI RILASCIATI DALLE CASSE SONO: 
+      1. RIEPILOGO ORDINE GENERALE
+      2. SCONTRINO UTILE AL RITIRO BEVANDE
+      3. SCONTRINO UTILE AL RITIRO DOLCI
 
     Grazie e Buon Appetito.
 
